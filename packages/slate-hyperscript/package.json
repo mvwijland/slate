@@ -34,7 +34,7 @@
     "hyperscript",
     "jsx",
     "html",
-    "@gitbook/slate",
+    "slate",
     "sugar",
     "xml"
   ]

@@ -30,7 +30,7 @@
     "simulate",
     "simulator",
     "spec",
-    "@gitbook/slate",
+    "slate",
     "test",
     "testing",
     "unit"

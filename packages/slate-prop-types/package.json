@@ -35,7 +35,7 @@
     "prop",
     "proptypes",
     "react",
-    "@gitbook/slate",
+    "slate",
     "types"
   ]
 }

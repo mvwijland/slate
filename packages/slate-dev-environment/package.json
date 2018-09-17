@@ -16,7 +16,7 @@
     "clean": "rm -rf ./dist ./lib ./node_modules"
   },
   "keywords": [
-    "@gitbook/slate"
+    "slate"
   ],
   "dependencies": {
     "is-in-browser": "^1.1.3"

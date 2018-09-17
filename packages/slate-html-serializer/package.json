@@ -43,7 +43,7 @@
     "html",
     "serialize",
     "serializer",
-    "@gitbook/slate",
+    "slate",
     "xml"
   ]
 }

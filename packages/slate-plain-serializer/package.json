@@ -38,7 +38,7 @@
     "plaintext",
     "serialize",
     "serializer",
-    "@gitbook/slate",
+    "slate",
     "string",
     "text",
     "xml"
