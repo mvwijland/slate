@@ -24,7 +24,7 @@
     "editor",
     "keybinding",
     "keypress",
-    "slate",
+    "@gitbook/slate",
     "text"
   ]
 }

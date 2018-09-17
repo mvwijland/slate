@@ -99,8 +99,6 @@ function configure(pkg, env, target) {
     }
   }
 
-  console.log('   ', { deps })
-
   if (isModule) {
     return {
       plugins,
@@ -122,8 +120,7 @@ function configure(pkg, env, target) {
       // they are present at runtime. In the case of non-UMD configs, this means
       // all non-Slate packages.
       external: id => {
-        console.log({ id })
-        return !!deps.find(dep => dep === id || new RegExp(dep).test(id))
+        return !!deps.find(dep => dep === id || id.startsWith(`${dep}/`))
       },
     }
   }

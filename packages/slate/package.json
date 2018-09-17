@@ -53,7 +53,7 @@
     "rich",
     "rich-text",
     "richtext",
-    "slate",
+    "@gitbook/slate",
     "text",
     "wysiwyg",
     "wysiwym"

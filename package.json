@@ -76,7 +76,7 @@
     "webpack-dev-server": "^2.11.1"
   },
   "peerDependencies": {
-    "slate": "*",
+    "@gitbook/slate": "*",
     "@gitbook/slate-html-serializer": "*",
     "@gitbook/slate-plain-serializer": "*",
     "@gitbook/slate-react": "*",

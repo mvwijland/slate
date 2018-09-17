@@ -20,11 +20,11 @@
     "immutable": ">=3.8.1",
     "react": ">=0.14.0",
     "react-dom": ">=0.14.0",
-    "slate": ">=0.32.0"
+    "@gitbook/slate": ">=0.32.0"
   },
   "devDependencies": {
     "mocha": "^2.5.3",
-    "slate": "^0.34.7",
+    "@gitbook/slate": "^0.34.7",
     "@gitbook/slate-hyperscript": "^0.5.22"
   },
   "scripts": {
@@ -35,7 +35,7 @@
     "react": "React",
     "react-dom": "ReactDOM",
     "react-dom/server": "ReactDOMServer",
-    "slate": "Slate"
+    "@gitbook/slate": "Slate"
   },
   "keywords": [
     "deserialize",
@@ -43,7 +43,7 @@
     "html",
     "serialize",
     "serializer",
-    "slate",
+    "@gitbook/slate",
     "xml"
   ]
 }

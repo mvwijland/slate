@@ -13,16 +13,16 @@
     "lib/"
   ],
   "peerDependencies": {
-    "slate": ">=0.32.0"
+    "@gitbook/slate": ">=0.32.0"
   },
   "devDependencies": {
-    "slate": "^0.34.7"
+    "@gitbook/slate": "^0.34.7"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./lib ./node_modules"
   },
   "umdGlobals": {
-    "slate": "Slate"
+    "@gitbook/slate": "Slate"
   },
   "keywords": [
     "ci",
@@ -30,7 +30,7 @@
     "simulate",
     "simulator",
     "spec",
-    "slate",
+    "@gitbook/slate",
     "test",
     "testing",
     "unit"
