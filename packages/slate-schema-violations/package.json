@@ -13,8 +13,8 @@
     "lib/"
   ],
   "devDependencies": {
-    "mocha": "^2.5.3",
-    "@gitbook/slate": "^0.34.7"
+    "@gitbook/slate": "^0.34.7",
+    "mocha": "^2.5.3"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./lib ./node_modules"

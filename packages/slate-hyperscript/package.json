@@ -13,16 +13,16 @@
     "lib/"
   ],
   "dependencies": {
+    "@gitbook/slate-dev-logger": "^0.1.39",
     "is-empty": "^1.0.0",
-    "is-plain-object": "^2.0.4",
-    "@gitbook/slate-dev-logger": "^0.1.39"
+    "is-plain-object": "^2.0.4"
   },
   "peerDependencies": {
     "@gitbook/slate": ">=0.32.0"
   },
   "devDependencies": {
-    "mocha": "^2.5.3",
-    "@gitbook/slate": "^0.34.7"
+    "@gitbook/slate": "^0.34.7",
+    "mocha": "^2.5.3"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./lib ./node_modules"

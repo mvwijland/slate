@@ -16,8 +16,8 @@
     "@gitbook/slate": ">=0.32.0"
   },
   "devDependencies": {
-    "mocha": "^2.5.3",
-    "@gitbook/slate": "^0.34.7"
+    "@gitbook/slate": "^0.34.7",
+    "mocha": "^2.5.3"
   },
   "dependencies": {
     "isomorphic-base64": "^1.0.2"

@@ -16,13 +16,13 @@
     "@gitbook/slate-dev-logger": "^0.1.39"
   },
   "peerDependencies": {
-    "immutable": ">=3.8.1",
-    "@gitbook/slate": ">=0.32.0"
+    "@gitbook/slate": ">=0.32.0",
+    "immutable": ">=3.8.1"
   },
   "devDependencies": {
-    "mocha": "^2.5.3",
     "@gitbook/slate": "^0.34.7",
-    "@gitbook/slate-hyperscript": "^0.5.22"
+    "@gitbook/slate-hyperscript": "^0.5.22",
+    "mocha": "^2.5.3"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./lib ./node_modules"

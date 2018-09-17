@@ -17,15 +17,15 @@
     "type-of": "^2.0.1"
   },
   "peerDependencies": {
+    "@gitbook/slate": ">=0.32.0",
     "immutable": ">=3.8.1",
     "react": ">=0.14.0",
-    "react-dom": ">=0.14.0",
-    "@gitbook/slate": ">=0.32.0"
+    "react-dom": ">=0.14.0"
   },
   "devDependencies": {
-    "mocha": "^2.5.3",
     "@gitbook/slate": "^0.34.7",
-    "@gitbook/slate-hyperscript": "^0.5.22"
+    "@gitbook/slate-hyperscript": "^0.5.22",
+    "mocha": "^2.5.3"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./lib ./node_modules"
