@@ -1,9 +1,9 @@
 {
   "name": "@gitbook/slate-schema",
-  "description": "Normalization tools for Slate documents optimized for performance. Made to work in place of Slate's own normalization engine.",
+  "description": "Normalization tools for Slate documents, optimized for performance. Made to work in place of Slate's own normalization engine.",
   "version": "0.0.1",
   "license": "MIT",
-  "repository": "git://github.com/GitbookIO/slate-schema.git",
+  "repository": "git://github.com/GitbookIO/slate.git",
   "main": "lib/slate-schema.js",
   "module": "lib/slate-schema.es.js",
   "umd": "dist/slate-schema.js",
