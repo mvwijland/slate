@@ -11,6 +11,8 @@ import slatePropTypes from '../../packages/slate-prop-types/package.json'
 import slateReact from '../../packages/slate-react/package.json'
 import slateSchemaViolations from '../../packages/slate-schema-violations/package.json'
 import slateSimulator from '../../packages/slate-simulator/package.json'
+import slateSchema from '../../packages/slate-schema/package.json'
+
 // Do not import slateDevBenchmark here. The benchmark shall be a pure nodeJS program and can be run without babel-node
 
 const configurations = [
@@ -26,6 +28,7 @@ const configurations = [
   ...factory(slateReact),
   ...factory(slateSchemaViolations),
   ...factory(slateSimulator),
+  ...factory(slateSchema),
 ]
 
 export default configurations
