@@ -1,0 +1,39 @@
+{
+  "name": "@gitbook/slate-schema",
+  "description": "Normalization tools for Slate documents optimized for performance. Made to work in place of Slate's own normalization engine.",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "repository": "git://github.com/GitbookIO/slate-schema.git",
+  "main": "./dist/index.js",
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "@gitbook/slate": "*"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.10.0",
+    "eslint-config-gitbook": "^2.0.3",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.4.0",
+    "flow-bin": "^0.57.3",
+    "immutable": "^3.8.2",
+    "@gitbook/slate": "^0.34.7",
+    "@gitbook/slate-hyperscript": "^0.5.22"
+  },
+  "scripts": {
+    "lint": "eslint ./src"
+  },
+  "keywords": [
+    "slate",
+    "schema",
+    "normalization",
+    "performance"
+  ]
+}
