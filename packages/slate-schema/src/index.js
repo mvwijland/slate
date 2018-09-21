@@ -30,19 +30,25 @@ function normalizeValue({
         .set('selection', validated.selection)
 }
 
-function normalizeDocument({
-  schema,
-  document,
-  selection,
-}: {
+function normalizeDocument(input: {
   schema: Schema,
   document: Document,
   selection: Range,
 }): { document: Document, selection?: Range } {
-  const validated = normalizeNode({ schema, node: document, selection })
+  const { node: document, selection } = normalizeNode({
+    // $FlowFixMe Document is a Node
+    node: input.document,
+    schema: input.schema,
+    selection: input.selection,
+  })
+
+  if (!document) {
+    throw new Error('Cannot normalize document out')
+  }
+
   return {
-    document: validated.node,
-    selection: validated.selection,
+    document,
+    selection,
   }
 }
 
@@ -57,10 +63,9 @@ function normalizeChildren({
 }): { children: List<Node>, selection?: Range } {
   // True has long as no child needed normalization
   let noChange = true
-  let validatedChildren
   let validatedSelection = selection
 
-  children.forEach((child, index) => {
+  let validatedChildren = children.map(child => {
     const validated = normalizeNode({
       schema,
       node: child,
@@ -68,22 +73,21 @@ function normalizeChildren({
     })
 
     if (validated.node === child) {
-      return
-    }
-
-    if (noChange) {
-      // Keep all previous children unchanged
-      validatedChildren = children.slice(0, index).asMutable()
+      return child
+    } else {
       noChange = false
-    }
 
-    validatedChildren.push(validated.node)
-    validatedSelection = validated.selection
+      validatedSelection = validated.selection
+      return validated.node
+    }
   })
 
   // Check if we changed anything or if we should reuse the existing children
-  validatedChildren =
-    (validatedChildren && validatedChildren.asImmutable()) || children
+  if (noChange) {
+    validatedChildren = children
+  } else {
+    validatedChildren = validatedChildren.filter(Boolean)
+  }
 
   return {
     children: validatedChildren,
@@ -95,7 +99,7 @@ function normalizeNode(input: {
   schema: Schema,
   node: Node,
   selection: Range,
-}): { node: Node, selection?: Range } {
+}): { node: ?Node, selection?: Range } {
   const { schema } = input
   let validatedNode = input.node
   let validatedSelection = input.selection
@@ -120,7 +124,8 @@ function normalizeNode(input: {
   // Normalize the node itself
   let valid = false
 
-  while (!valid) {
+  // Stop until the node is valid or was deleted
+  while (!valid && validatedNode) {
     const rules = schema.getRules(validatedNode)
     // Not all rules will be evaluated because rules is a lazy Seq
     const normalizer = rules.map(rule => rule(validatedNode)).find(Boolean)

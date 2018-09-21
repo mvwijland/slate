@@ -1,9 +1,16 @@
 /** @jsx h */
 
-import h from './helpers/h'
 import { List } from 'immutable'
-import { createSchema, normalizeDocument } from '..'
+import hyperprint from '@gitbook/slate-hyperprint'
 import { Text } from '@gitbook/slate'
+import { createSchema, normalizeDocument } from '..'
+import h from './helpers/h'
+
+function expectModel(actual, expected, options) {
+  expect(hyperprint(actual, { strict: true, ...options })).toBe(
+    hyperprint(expected, { strict: true, ...options })
+  )
+}
 
 /**
  * Tests.
@@ -54,7 +61,37 @@ describe('slate-schema', () => {
         </document>
       )
 
-      expect(actual.text).toEqual(expected.text)
+      expectModel(actual, expected)
+    })
+
+    it('should allow node deletion', () => {
+      const schema = createSchema({
+        block: {
+          paragraph: [
+            paragraph => {
+              if (/invalid/.test(paragraph.text)) {
+                return (node, selection) => ({
+                  // Delete the node
+                  node: null,
+                  selection,
+                })
+              }
+            },
+          ],
+        },
+      })
+
+      const input = (
+        <document>
+          <paragraph>invalid</paragraph>
+        </document>
+      )
+
+      const actual = normalizeDocument({ schema, document: input }).document
+
+      const expected = <document />.set('nodes', List())
+
+      expectModel(actual, expected)
     })
   })
 })
