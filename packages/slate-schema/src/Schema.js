@@ -20,9 +20,7 @@ type SchemaDefinition = {
 }
 
 class Schema extends Record(
-  ({ definition: {} }: {
-    definition: SchemaDefinition,
-  })
+  ({ object: {}, block: {}, inline: {} }: SchemaDefinition)
 ) {
   definition: SchemaDefinition
 
@@ -47,9 +45,8 @@ class Schema extends Record(
   getRules(node: Node): Seq<Rule> {
     const { object, type } = node
 
-    const objectRules = this.definition.object[object] || EMPTY
-    const typeRules =
-      (this.definition[object] && this.definition[object][type]) || EMPTY
+    const objectRules = this.object[object] || EMPTY
+    const typeRules = (this[object] && this[object][type]) || EMPTY
 
     return Seq(objectRules).concat(Seq(typeRules))
   }

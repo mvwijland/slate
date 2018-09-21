@@ -111,7 +111,7 @@ function normalizeNode(input: {
     })
 
     if (validated.children !== children) {
-      validatedNode.set('nodes', validated.children)
+      validatedNode = validatedNode.set('nodes', validated.children)
     }
 
     validatedSelection = validated.selection
@@ -122,15 +122,13 @@ function normalizeNode(input: {
 
   while (!valid) {
     const rules = schema.getRules(validatedNode)
-
-    // Not all rules will be applied because rules is a lazy Seq
+    // Not all rules will be evaluated because rules is a lazy Seq
     const normalizer = rules.map(rule => rule(validatedNode)).find(Boolean)
 
     if (normalizer) {
-      ;({ node: validatedNode, selection: validatedSelection } = normalizer(
-        validatedNode,
-        validatedSelection
-      ))
+      const validated = normalizer(validatedNode, validatedSelection)
+      validatedNode = validated.node
+      validatedSelection = validated.selection
     } else {
       valid = true
     }
@@ -142,10 +140,4 @@ function normalizeNode(input: {
   }
 }
 
-export default {
-  createSchema,
-
-  normalizeValue,
-  normalizeDocument,
-  normalizeNode,
-}
+export { createSchema, normalizeValue, normalizeDocument, normalizeNode }
