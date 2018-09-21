@@ -1,48 +1,151 @@
 /* @flow */
 
 import type { Value, Document, Node, Range } from '@gitbook/slate'
+import type { List } from 'immutable'
+import type { SchemaOptions } from './types'
 
-/**
- * Export.
- */
+import Schema from './Schema'
 
-type Schema = {}
-
-type SchemaOptions = {
-  document?: Rule[],
-  block?: Rule[],
-  inline?: Rule[],
-  text?: Rule[],
-
-  blocks?: {
-    [type: String]: Rule[],
-  },
-  inlines?: {
-    [type: String]: Rule[],
-  },
+function createSchema(options: SchemaOptions): Schema {
+  return Schema.create(options)
 }
 
-// Having the rule return a normalizer function or not indicates whether the
-// node is valid.
-// It's also easier to write the logic for normalization, since the validation
-// variables are inside a closure.
-// Concerning memoization, we will only cache whether the node is valid
-// regarding the current schema instance, we won't store the returned
-// Normalizer value.
-type Rule = Node => ?Normalizer
+function normalizeValue({
+  schema,
+  value,
+}: {
+  schema: Schema,
+  value: Value,
+}): Value {
+  const validated = normalizeDocument({
+    schema,
+    document: value.document,
+    selection: value.selection,
+  })
 
-type Normalizer = (
+  return validated.document === value.document
+    ? value
+    : value
+        .set('document', validated.document)
+        .set('selection', validated.selection)
+}
+
+function normalizeDocument({
+  schema,
+  document,
+  selection,
+}: {
+  schema: Schema,
+  document: Document,
+  selection: Range,
+}): { document: Document, selection?: Range } {
+  const validated = normalizeNode({ schema, node: document, selection })
+  return {
+    document: validated.node,
+    selection: validated.selection,
+  }
+}
+
+function normalizeChildren({
+  schema,
+  children,
+  selection,
+}: {
+  schema: Schema,
+  children: List<Node>,
+  selection: Range,
+}): { children: List<Node>, selection?: Range } {
+  // True has long as no child needed normalization
+  let noChange = true
+  let validatedChildren
+  let validatedSelection = selection
+
+  children.forEach((child, index) => {
+    const validated = normalizeNode({
+      schema,
+      node: child,
+      selection: validatedSelection,
+    })
+
+    if (validated.node === child) {
+      return
+    }
+
+    if (noChange) {
+      // Keep all previous children unchanged
+      validatedChildren = children.slice(0, index).asMutable()
+      noChange = false
+    }
+
+    validatedChildren.push(validated.node)
+    validatedSelection = validated.selection
+  })
+
+  // Check if we changed anything or if we should reuse the existing children
+  validatedChildren =
+    (validatedChildren && validatedChildren.asImmutable()) || children
+
+  return {
+    children: validatedChildren,
+    selection: validatedSelection,
+  }
+}
+
+function normalizeNode(input: {
+  schema: Schema,
   node: Node,
-  // In case the selection should be normalized too, it is provided
-  selection?: Range
-) => { node: ?Node, selection?: Range }
+  selection: Range,
+}): { node: Node, selection?: Range } {
+  const { schema } = input
+  let validatedNode = input.node
+  let validatedSelection = input.selection
 
-interface SlateSchemaModule {
-  createSchema(SchemaOptions): Schema;
+  // Normalize children
+  const children = input.node.nodes
 
-  normalizeValue(schema: Schema, value: Document): Value;
-  normalizeDocument(schema: Schema, document: Document): Document;
-  normalizeNode(schema: Schema, node: Node): Node;
+  if (children) {
+    const validated = normalizeChildren({
+      schema,
+      children,
+      selection: validatedSelection,
+    })
+
+    if (validated.children !== children) {
+      validatedNode.set('nodes', validated.children)
+    }
+
+    validatedSelection = validated.selection
+  }
+
+  // Normalize the node itself
+  let valid = false
+
+  while (!valid) {
+    const rules = schema.getRules(validatedNode)
+
+    // Not all rules will be applied because rules is a lazy Seq
+    const normalizer = rules.map(rule => rule(validatedNode)).find(Boolean)
+
+    if (normalizer) {
+      ;({ node: validatedNode, selection: validatedSelection } = normalizer(
+        validatedNode,
+        validatedSelection
+      ))
+    } else {
+      valid = true
+    }
+  }
+
+  return {
+    node: validatedNode,
+    selection: validatedSelection,
+  }
 }
 
-export default {}
+export default {
+  createSchema,
+
+  normalizeValue,
+  normalizeDocument,
+  normalizeNode,
+}

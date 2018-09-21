@@ -5,7 +5,6 @@ emoji=true
 <PROJECT_ROOT>/packages/slate-schema/
 
 [ignore]
-.*/node_modules/.*
 .*/dist/.*
 .*/lib/.*
 <PROJECT_ROOT>/packages/slate/.*
