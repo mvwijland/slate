@@ -1,16 +1,9 @@
 /** @jsx h */
 
 import { List } from 'immutable'
-import hyperprint from '@gitbook/slate-hyperprint'
 import { Text } from '@gitbook/slate'
 import { createSchema, normalizeDocument } from '..'
 import h from './helpers/h'
-
-function expectModel(actual, expected, options) {
-  expect(hyperprint(actual, { strict: true, ...options })).toBe(
-    hyperprint(expected, { strict: true, ...options })
-  )
-}
 
 /**
  * Tests.
@@ -61,7 +54,7 @@ describe('slate-schema', () => {
         </document>
       )
 
-      expectModel(actual, expected)
+      expect(actual).toMatchSlate(expected)
     })
 
     it('should allow node deletion', () => {
@@ -91,7 +84,7 @@ describe('slate-schema', () => {
 
       const expected = <document />.set('nodes', List())
 
-      expectModel(actual, expected)
+      expect(actual).toMatchSlate(expected)
     })
   })
 })

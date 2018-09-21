@@ -6,6 +6,7 @@
   ],
   "devDependencies": {
     "@gitbook/slate-dev-benchmark": "*",
+    "@gitbook/slate-hyperprint": "^2.2.6",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
@@ -42,6 +43,7 @@
     "is-hotkey": "^0.1.1",
     "is-url": "^1.2.2",
     "jest": "^23.6.0",
+    "jest-diff": "^23.6.0",
     "jsdom": "^11.5.1",
     "lerna": "^2.7.1",
     "lodash": "^4.17.4",
@@ -85,8 +87,12 @@
     "@gitbook/slate-react": "*",
     "@gitbook/slate-schema-violations": "*"
   },
-  "jest":{
-    "testPathIgnorePatterns": ["/helpers/", "/node_modules/"]
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/helpers/",
+      "/node_modules/"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/support/tests/setup.js"
   },
   "scripts": {
     "benchmark": "cross-env COMPARE=compare node --expose-gc ./tmp/benchmark/index.js",

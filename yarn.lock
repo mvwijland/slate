@@ -129,7 +129,7 @@
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-0.7.1.tgz#e44e596d03c9f16ba3b127ad333a8a072bcb5a0a"
 
-"@gitbook/slate-hyperprint@2.2.6":
+"@gitbook/slate-hyperprint@^2.2.6":
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/@gitbook/slate-hyperprint/-/slate-hyperprint-2.2.6.tgz#efdd725fe8db328c5a7c5600d371db0f234a2ac5"
   dependencies:

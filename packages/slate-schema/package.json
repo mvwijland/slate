@@ -19,8 +19,7 @@
   },
   "devDependencies": {
     "@gitbook/slate": "^0.34.8",
-    "immutable": ">=3.8.1",
-    "@gitbook/slate-hyperprint": "2.2.6"
+    "immutable": ">=3.8.1"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./lib ./node_modules"
