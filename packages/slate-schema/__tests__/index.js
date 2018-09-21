@@ -1,6 +1,5 @@
 /** @jsx h */
 
-import assert from 'assert'
 import h from './helpers/h'
 import { List } from 'immutable'
 import { createSchema, normalizeDocument } from '..'
@@ -21,7 +20,7 @@ describe('slate-schema', () => {
       },
     })
 
-    assert.ok(schema)
+    expect(schema).toBeDefined()
   })
 
   describe('normalizeDocument', () => {
@@ -31,8 +30,9 @@ describe('slate-schema', () => {
           paragraph: [
             paragraph => {
               if (/invalid/.test(paragraph.text)) {
-                return node => ({
+                return (node, selection) => ({
                   node: node.set('nodes', List([Text.create('valid')])),
+                  selection,
                 })
               }
             },
@@ -54,7 +54,7 @@ describe('slate-schema', () => {
         </document>
       )
 
-      assert.equal(actual.text, expected.text)
+      expect(actual.text).toEqual(expected.text)
     })
   })
 })
