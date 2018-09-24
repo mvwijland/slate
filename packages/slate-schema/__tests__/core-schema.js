@@ -111,7 +111,7 @@ describe('slate-schema with core schema', () => {
     expect(actual).toMatchSlate(expected)
   })
 
-  it.only('should put text around inlines', () => {
+  it('should put text around inlines', () => {
     const input = (
       <document>
         <paragraph>
@@ -127,16 +127,20 @@ describe('slate-schema with core schema', () => {
       .document
 
     const expected = (
-      <link>
-        <text />
-        <link>one</link>
-        <text />
-        <link>two</link>
-        <text />
-      </link>
+      <document>
+        <paragraph>
+          <text />
+          <link>
+            <text />
+            <link>one</link>
+            <text />
+            <link>two</link>
+            <text />
+          </link>
+          <text />
+        </paragraph>
+      </document>
     )
-
-    console.log(JSON.stringify(expected, null, 2))
 
     expect(actual).not.toMatchSlate(input)
     expect(actual).toMatchSlate(expected)
