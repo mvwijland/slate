@@ -1,6 +1,8 @@
 /** @jsx h */
+/* eslint-disable react/jsx-key */
 
 import { List } from 'immutable'
+import { Text } from '@gitbook/slate'
 import h from './helpers/h'
 
 import coreSchema from '../src/core-schema'
@@ -99,11 +101,13 @@ describe('slate-schema with core schema', () => {
     const actual = normalizeDocument({ schema: coreSchema, document: input })
       .document
 
+    // There's a bug for hyperscript, hence the weird construction
+    // https://github.com/ianstormtaylor/slate/issues/2199
     const expected = (
       <document>
-        <paragraph>
-          <link>two</link>
-        </paragraph>
+        {<paragraph />.merge({
+          nodes: List([Text.create(''), <link>two</link>, Text.create('')]),
+        })}
       </document>
     )
 
@@ -126,19 +130,117 @@ describe('slate-schema with core schema', () => {
     const actual = normalizeDocument({ schema: coreSchema, document: input })
       .document
 
+    // There's a bug for hyperscript, hence the weird construction
+    // https://github.com/ianstormtaylor/slate/issues/2199
+    const expected = (
+      <document>
+        {<paragraph />.merge({
+          nodes: List([
+            Text.create(''),
+            <link />.merge({
+              nodes: List([
+                Text.create(''),
+                <link>one</link>,
+                Text.create(''),
+                <link>two</link>,
+                Text.create(''),
+              ]),
+            }),
+            Text.create(''),
+          ]),
+        })}
+      </document>
+    )
+
+    expect(actual).not.toMatchSlate(input)
+    expect(actual).toMatchSlate(expected)
+  })
+
+  it('should preserve empty inline voids', () => {
+    const input = (
+      <document>
+        <paragraph>
+          <link>
+            <inline isVoid type="emoji" />
+          </link>
+        </paragraph>
+      </document>
+    )
+
+    const actual = normalizeDocument({ schema: coreSchema, document: input })
+      .document
+
+    // There's a bug for hyperscript, hence the weird construction
+    // https://github.com/ianstormtaylor/slate/issues/2199
+    const expected = (
+      <document>
+        {<paragraph />.merge({
+          nodes: List([
+            Text.create(''),
+            <link />.merge({
+              nodes: List([
+                Text.create(''),
+                <inline isVoid type="emoji" />,
+                Text.create(''),
+              ]),
+            }),
+            Text.create(''),
+          ]),
+        })}
+      </document>
+    )
+
+    expect(actual).not.toMatchSlate(input)
+    expect(actual).toMatchSlate(expected)
+  })
+
+  it('should remove empty inlines', () => {
+    const input = (
+      <document>
+        <paragraph>
+          <link />
+        </paragraph>
+      </document>
+    )
+
+    const actual = normalizeDocument({ schema: coreSchema, document: input })
+      .document
+
     const expected = (
       <document>
         <paragraph>
           <text />
-          <link>
-            <text />
-            <link>one</link>
-            <text />
-            <link>two</link>
-            <text />
-          </link>
-          <text />
         </paragraph>
+      </document>
+    )
+
+    expect(actual).not.toMatchSlate(input)
+    expect(actual).toMatchSlate(expected)
+  })
+
+  it('should remove nested empty inlines', () => {
+    const input = (
+      <document>
+        <paragraph>
+          <link>
+            one
+            <link />
+            two
+          </link>
+        </paragraph>
+      </document>
+    )
+
+    const actual = normalizeDocument({ schema: coreSchema, document: input })
+      .document
+
+    // There's a bug for hyperscript, hence the weird construction
+    // https://github.com/ianstormtaylor/slate/issues/2199
+    const expected = (
+      <document>
+        {<paragraph />.merge({
+          nodes: List([Text.create(''), <link>onetwo</link>, Text.create('')]),
+        })}
       </document>
     )
 
