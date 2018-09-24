@@ -134,16 +134,76 @@ const inlineVoidAreBetweenTexts: Rule = node => {
  */
 
 const mergeAdjacentTextNodes: Rule = node => {
-  const valid = node.nodes.every((child, i) => {
-    if (!isText(child)) return true
+  const invalids = node.nodes
+    .map((child, i) => {
+      if (!isText(child)) return null
 
-    const next = node.nodes.get(i + 1)
-    return !next || !isText(next)
-  })
+      const next = node.nodes.get(i + 1)
+      if (!next || !isText(next)) return null
+      return next
+    })
+    .filter(Boolean)
 
-  return
+  if (invalids.isEmpty()) return
 
-  // TODO
+  return (n, selection) => {
+    let normalizedNode = n
+
+    // Reverse the list to handle consecutive merges, since the earlier nodes
+    // will always exist after each merge.
+    invalids.reverse().forEach(invalidText => {
+      const invalidIndex = node.nodes.indexOf(invalidText)
+      const previousIndex = invalidIndex - 1
+      normalizedNode = normalizedNode.mergeNode(previousIndex, invalidIndex)
+    })
+
+    return {
+      node: normalizedNode,
+      selection,
+    }
+  }
+}
+
+/**
+ * Prevent extra empty text nodes, except when adjacent to inline void nodes.
+ */
+
+const removeExtraEmptyTexts: Rule = node => {
+  if (!isBlock(node) && !isInline(node)) return
+
+  const { nodes } = node
+  if (nodes.size <= 1) return
+
+  const invalids = nodes
+    .filter((child, i) => {
+      if (!isText(child)) return
+      if (child.text.length > 0) return
+
+      const prev = i > 0 ? nodes.get(i - 1) : null
+      const next = nodes.get(i + 1)
+
+      // If it's the first node, and the next is a void, preserve it.
+      if (!prev && isInline(next)) return
+
+      // It it's the last node, and the previous is an inline, preserve it.
+      if (!next && isInline(prev)) return
+
+      // If it's surrounded by inlines, preserve it.
+      if (next && prev && isInline(next) && isInline(prev)) return
+
+      // Otherwise, remove it.
+      return true
+    })
+    .toSet()
+
+  if (invalids.isEmpty()) return
+
+  return (n, selection) => {
+    return {
+      node: n.set('nodes', n.nodes.filter(child => !invalids.contains(child))),
+      selection,
+    }
+  }
 }
 
 // Re-create the Slate's core schema
@@ -155,6 +215,7 @@ const coreSchema = createSchema({
       atLeastOneChild,
       inlineVoidAreBetweenTexts,
       mergeAdjacentTextNodes,
+      removeExtraEmptyTexts,
     ],
     inline: [
       inlinesContainInlines,
@@ -162,6 +223,7 @@ const coreSchema = createSchema({
       inlinesAreNotEmpty,
       inlineVoidAreBetweenTexts,
       mergeAdjacentTextNodes,
+      removeExtraEmptyTexts,
     ],
   },
 })
