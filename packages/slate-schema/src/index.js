@@ -125,7 +125,15 @@ function normalizeNode(input: {
   let valid = false
 
   // Stop until the node is valid or was deleted
+  let count = 0
+
   while (!valid && validatedNode) {
+    count++
+
+    if (count > 3) {
+      throw new Error('Could not validate node after 10 iterations')
+    }
+
     const rules = schema.getRules(validatedNode)
     // Not all rules will be evaluated because rules is a lazy Seq
     const normalizer = rules.map(rule => rule(validatedNode)).find(Boolean)

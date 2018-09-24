@@ -1,243 +1,21 @@
 /** @jsx h */
 
 import { List } from 'immutable'
-import { Text } from '@gitbook/slate'
-import type { Rule } from '../src/types'
-import { createSchema, normalizeDocument } from '..'
 import h from './helpers/h'
 
-const isBlock = n => n.object === 'block'
-const isInline = n => n.object === 'inline' || n.object === 'text'
-const isInlineOrText = n => n.object === 'inline' || n.object === 'text'
-const isText = n => n.object === 'text'
-
-/**
- * Only allow block nodes in documents.
- */
-
-const onlyBlocksInDocument: Rule = document => {
-  const valid = document.nodes.every(isBlock)
-  if (valid) return
-
-  return (doc, selection) => ({
-    node: doc.set('nodes', doc.nodes.filter(isBlock)),
-    selection,
-  })
-}
-
-/**
- * Only allow block nodes or inline and text nodes in blocks.
- */
-
-const blocksContainBlocksOrInlines: Rule = block => {
-  const first = block.nodes.first()
-  if (!first) return
-
-  const isValid = isBlock(first) ? isBlock : isInlineOrText
-  const valid = block.nodes.every(isValid)
-
-  if (valid) return
-
-  return (node, selection) => ({
-    node: node.set('nodes', node.nodes.filter(isValid)),
-    selection,
-  })
-}
-
-/**
- * Only allow inline and text nodes in inlines.
- */
-
-const inlinesContainInlines: Rule = inline => {
-  const valid = inline.nodes.every(isInlineOrText)
-  if (valid) return
-
-  return (node, selection) => ({
-    node: node.set('nodes', node.nodes.filter(isInlineOrText)),
-    selection,
-  })
-}
-
-/**
- * Ensure that block and inline nodes have at least one text child.
- */
-
-const atLeastOneChild: Rule = node => {
-  if (!node.nodes.isEmpty()) return
-
-  return (n, selection) => ({
-    node: n.set('nodes', List([Text.create()])),
-    selection,
-  })
-}
-
-/**
- * Ensure that inline non-void nodes are never empty.
- */
-
-const inlinesAreNotEmpty: Rule = inline => {
-  const valid = inline.isVoid || !inline.isEmpty
-  if (valid) return
-
-  return (n, selection) => ({
-    node: null,
-    selection,
-  })
-}
-
-/**
- * Ensure that inline void nodes are surrounded by text nodes, by adding extra
- * blank text nodes if necessary.
- */
-
-const inlineVoidAreBetweenTexts: Rule = node => {
-  const inlineNeedsSurrounding = index => {
-    const prev = index > 0 ? node.nodes.get(index - 1) : null
-    const next = node.nodes.get(index + 1)
-    const after = !prev
-    const before = !next || isInline(next)
-
-    return { after, before }
-  }
-
-  const valid = node.nodes.every((list, child, index) => {
-    if (!isInline(child)) return true
-
-    const shouldInsert = inlineNeedsSurrounding(child, index)
-    return shouldInsert.after || shouldInsert.before
-  })
-
-  if (valid) return
-
-  return (n, selection) => {
-    return {
-      node: n.set(
-        'nodes',
-        n.nodes.flatMap((child, index) => {
-          const result = [child]
-
-          if (isInline(child)) {
-            const shouldInsert = inlineNeedsSurrounding(index)
-            if (shouldInsert.before) result.unshift(Text.create())
-            if (shouldInsert.after) result.push(Text.create())
-          }
-          return result
-        })
-      ),
-      selection,
-    }
-  }
-}
-
-/**
- * Merge adjacent text nodes.
- */
-
-const mergeAdjacentTextNodes: Rule = node => {
-  const invalids = node.nodes
-    .map((child, i) => {
-      if (!isText(child)) return null
-
-      const next = node.nodes.get(i + 1)
-      if (!next || !isText(next)) return null
-      return next
-    })
-    .filter(Boolean)
-
-  if (invalids.isEmpty()) return
-
-  return (n, selection) => {
-    let normalizedNode = n
-
-    // Reverse the list to handle consecutive merges, since the earlier nodes
-    // will always exist after each merge.
-    invalids.reverse().forEach(invalidText => {
-      const invalidIndex = node.nodes.indexOf(invalidText)
-      const previousIndex = invalidIndex - 1
-      normalizedNode = normalizedNode.mergeNode(previousIndex, invalidIndex)
-    })
-
-    return {
-      node: normalizedNode,
-      selection,
-    }
-  }
-}
-
-/**
- * Prevent extra empty text nodes, except when adjacent to inline void nodes.
- */
-
-const removeExtraEmptyTexts: Rule = node => {
-  if (!isBlock(node) && !isInline(node)) return
-
-  const { nodes } = node
-  if (nodes.size <= 1) return
-
-  const invalids = nodes
-    .filter((child, i) => {
-      if (!isText(child)) return
-      if (child.text.length > 0) return
-
-      const prev = i > 0 ? nodes.get(i - 1) : null
-      const next = nodes.get(i + 1)
-
-      // If it's the first node, and the next is a void, preserve it.
-      if (!prev && isInline(next)) return
-
-      // It it's the last node, and the previous is an inline, preserve it.
-      if (!next && isInline(prev)) return
-
-      // If it's surrounded by inlines, preserve it.
-      if (next && prev && isInline(next) && isInline(prev)) return
-
-      // Otherwise, remove it.
-      return true
-    })
-    .toSet()
-
-  if (invalids.isEmpty()) return
-
-  return (n, selection) => {
-    return {
-      node: n.set('nodes', n.nodes.filter(child => !invalids.contains(child))),
-      selection,
-    }
-  }
-}
-
-// Re-create the Slate's core schema
-const coreSchema = createSchema({
-  object: {
-    document: [onlyBlocksInDocument],
-    block: [
-      blocksContainBlocksOrInlines,
-      atLeastOneChild,
-      inlineVoidAreBetweenTexts,
-      mergeAdjacentTextNodes,
-      removeExtraEmptyTexts,
-    ],
-    inline: [
-      inlinesContainInlines,
-      atLeastOneChild,
-      inlinesAreNotEmpty,
-      inlineVoidAreBetweenTexts,
-      mergeAdjacentTextNodes,
-      removeExtraEmptyTexts,
-    ],
-  },
-})
+import coreSchema from '../src/core-schema'
+import { normalizeDocument } from '../src'
 
 /**
  * Tests.
  */
 
 describe('slate-schema with core schema', () => {
-  it('should remove non-blocks from document', () => {
+  it('should remove inlines from document', () => {
     const input = (
       <document>
-        <paragraph>Hello</paragraph>
-        <link>Some text</link>
+        <link>one</link>
+        <paragraph>two</paragraph>
       </document>
     )
 
@@ -246,10 +24,121 @@ describe('slate-schema with core schema', () => {
 
     const expected = (
       <document>
-        <paragraph>Hello</paragraph>
+        <paragraph>two</paragraph>
       </document>
     )
 
+    expect(actual).not.toMatchSlate(input)
+    expect(actual).toMatchSlate(expected)
+  })
+
+  it('should create text in empty blocks', () => {
+    let input = (
+      <document>
+        <paragraph />
+      </document>
+    )
+
+    // Remove text put by hyperscript
+    input = input.merge({
+      nodes: input.nodes.map(paragraph =>
+        paragraph.merge({
+          nodes: List(),
+        })
+      ),
+    })
+
+    const actual = normalizeDocument({ schema: coreSchema, document: input })
+      .document
+
+    const expected = (
+      <document>
+        <paragraph>
+          <text />
+        </paragraph>
+      </document>
+    )
+
+    expect(actual).not.toMatchSlate(input)
+    expect(actual).toMatchSlate(expected)
+  })
+
+  it('should remove text from documents', () => {
+    const input = (
+      <document>
+        one
+        <paragraph>two</paragraph>
+      </document>
+    )
+
+    const actual = normalizeDocument({ schema: coreSchema, document: input })
+      .document
+
+    const expected = (
+      <document>
+        <paragraph>two</paragraph>
+      </document>
+    )
+
+    expect(actual).not.toMatchSlate(input)
+    expect(actual).toMatchSlate(expected)
+  })
+
+  it('should prevent blocks inside inlines', () => {
+    const input = (
+      <document>
+        <paragraph>
+          <link>
+            <paragraph>one</paragraph>
+            two
+          </link>
+        </paragraph>
+      </document>
+    )
+
+    const actual = normalizeDocument({ schema: coreSchema, document: input })
+      .document
+
+    const expected = (
+      <document>
+        <paragraph>
+          <link>two</link>
+        </paragraph>
+      </document>
+    )
+
+    expect(actual).not.toMatchSlate(input)
+    expect(actual).toMatchSlate(expected)
+  })
+
+  it.only('should put text around inlines', () => {
+    const input = (
+      <document>
+        <paragraph>
+          <link>
+            <link>one</link>
+            <link>two</link>
+          </link>
+        </paragraph>
+      </document>
+    )
+
+    const actual = normalizeDocument({ schema: coreSchema, document: input })
+      .document
+
+    const expected = (
+      <link>
+        <text />
+        <link>one</link>
+        <text />
+        <link>two</link>
+        <text />
+      </link>
+    )
+
+    console.log(JSON.stringify(expected, null, 2))
+
+    expect(actual).not.toMatchSlate(input)
     expect(actual).toMatchSlate(expected)
   })
 })
