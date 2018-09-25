@@ -1,8 +1,8 @@
 /* @flow */
 
 import { List } from 'immutable'
-import { Text } from '@gitbook/slate'
-import type { Rule } from '../src/types'
+import { Text, type Node } from '@gitbook/slate'
+import type { Rule, Normalizer } from '../src/types'
 import { createSchema } from './index.js'
 
 const isBlock = n => n.object === 'block'
@@ -227,7 +227,40 @@ const coreSchema = createSchema({
   },
 })
 
+function combineChildRules(
+  childRules: Array<
+    (acc: Object, parent: Node, child: Node, index: number) => ?Normalizer
+  >
+): Rule {
+  // Accumulators where each invidual rules can store
+  // its own data during iteration
+  let accs = Array(childRules.length).fill()
+  // Track which rules have matched or not
+
+  return node => {
+    // Initialize accs
+    accs = accs.map(() => ({}))
+
+    let normalizer
+
+    node.nodes.forEach((child, index) => {
+      childRules.forEach((rule, ruleIndex) => {
+        normalizer = rule(accs[ruleIndex], node, child, index)
+        return !normalizer
+      })
+      return !normalizer
+    })
+
+    return normalizer
+  }
+}
+
 /*
+
+DOCUMENT
+
+O(child)
+onlyBlocksInDocument
 
 BLOCKS
 
