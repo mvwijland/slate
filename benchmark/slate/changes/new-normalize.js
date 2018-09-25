@@ -1,10 +1,11 @@
 /** @jsx h */
 /* eslint-disable react/jsx-key */
 
+const SlateSchema = require('@gitbook/slate-schema')
 const h = require('../../helpers/h')
 
-module.exports.default = function(change) {
-  change.normalize()
+module.exports.default = function(value) {
+  SlateSchema.normalizeValue({ schema: SlateSchema.coreSchema, value })
 }
 
 const value = (
@@ -28,5 +29,5 @@ const value = (
 )
 
 module.exports.input = function() {
-  return value.change()
+  return value
 }

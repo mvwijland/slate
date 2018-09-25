@@ -5,6 +5,7 @@ import type { List } from 'immutable'
 import type { SchemaOptions } from './types'
 
 import Schema from './Schema'
+import coreSchema from './core-schema'
 
 function createSchema(options: SchemaOptions): Schema {
   return Schema.create(options)
@@ -153,4 +154,10 @@ function normalizeNode(input: {
   }
 }
 
-export { createSchema, normalizeValue, normalizeDocument, normalizeNode }
+export {
+  createSchema,
+  normalizeValue,
+  normalizeDocument,
+  normalizeNode,
+  coreSchema,
+}
