@@ -19,6 +19,13 @@ const h = createHyperscript({
       type: 'image',
       isVoid: true,
     },
+    table_cell: 'table_cell',
+    table: 'table',
+    table_row: 'table_row',
+    unstyled: 'unstyled',
+    list_item: 'list_item',
+    unordered_list: 'unordered_list',
+    ordered_list: 'ordered_list',
   },
   inlines: {
     link: 'link',
