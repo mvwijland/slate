@@ -1,7 +1,7 @@
 /* @flow */
 
 import type { Node } from '@gitbook/slate'
-import { Record, Seq } from 'immutable'
+import { Record } from 'immutable'
 
 import type { SchemaOptions, SlateObject, Rule } from './types'
 
