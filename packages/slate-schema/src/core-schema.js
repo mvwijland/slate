@@ -15,7 +15,7 @@ const isText = n => n.object === 'text'
  */
 
 const onlyBlocksInDocument: Rule = document => {
-  const valid = document.nodes.every(isBlock)
+  const valid = !document.hasInlinesOrTexts()
   if (valid) return
 
   return (doc, selection) => ({
@@ -32,13 +32,15 @@ const blocksContainBlocksOrInlines: Rule = block => {
   const first = block.nodes.first()
   if (!first) return
 
-  const isValid = isBlock(first) ? isBlock : isInlineOrText
-  const valid = block.nodes.every(isValid)
+  const valid = isBlock(first) ? !block.hasInlinesOrTexts() : !block.hasBlocks()
 
   if (valid) return
 
   return (node, selection) => ({
-    node: node.set('nodes', node.nodes.filter(isValid)),
+    node: node.set(
+      'nodes',
+      node.nodes.filter(isBlock(first) ? isBlock : isInlineOrText)
+    ),
     selection,
   })
 }
@@ -48,7 +50,7 @@ const blocksContainBlocksOrInlines: Rule = block => {
  */
 
 const inlinesContainInlines: Rule = inline => {
-  const valid = inline.nodes.every(isInlineOrText)
+  const valid = !inline.hasBlocks()
   if (valid) return
 
   return (node, selection) => ({
@@ -90,6 +92,8 @@ const inlinesAreNotEmpty: Rule = inline => {
  */
 
 const inlinesAreBetweenTexts: Rule = node => {
+  if (!node.hasInlines()) return
+
   const inlineNeedsSurrounding = index => {
     const prev = index > 0 ? node.nodes.get(index - 1) : null
     const next = node.nodes.get(index + 1)
@@ -133,6 +137,8 @@ const inlinesAreBetweenTexts: Rule = node => {
  */
 
 const mergeAdjacentTextNodes: Rule = node => {
+  if (!node.hasTexts()) return
+
   const invalids = node.nodes
     .map((child, i) => {
       if (!isText(child)) return null
@@ -168,10 +174,10 @@ const mergeAdjacentTextNodes: Rule = node => {
  */
 
 const removeExtraEmptyTexts: Rule = node => {
-  if (!isBlock(node) && !isInline(node)) return
-
   const { nodes } = node
   if (nodes.size <= 1) return
+
+  if (!node.hasTexts()) return
 
   const invalids = nodes
     .filter((child, i) => {
