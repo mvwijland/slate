@@ -39,16 +39,16 @@ class Schema extends Record(
   }
 
   /*
-   * Returns the sequence of rules to apply. Seq are used because they're lazy.
+   * Returns the sequence of rules to apply.
    */
 
-  getRules(node: Node): Seq<Rule> {
+  getRuleLists(node: Node): Array<Array<Rule>> {
     const { object, type } = node
 
     const objectRules = this.object[object] || EMPTY
     const typeRules = (this[object] && this[object][type]) || EMPTY
 
-    return Seq(objectRules).concat(Seq(typeRules))
+    return [typeRules, objectRules]
   }
 }
 

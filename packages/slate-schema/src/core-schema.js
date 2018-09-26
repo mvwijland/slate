@@ -89,7 +89,7 @@ const inlinesAreNotEmpty: Rule = inline => {
  * blank text nodes if necessary.
  */
 
-const inlineVoidAreBetweenTexts: Rule = node => {
+const inlinesAreBetweenTexts: Rule = node => {
   const inlineNeedsSurrounding = index => {
     const prev = index > 0 ? node.nodes.get(index - 1) : null
     const next = node.nodes.get(index + 1)
@@ -212,7 +212,7 @@ const coreSchema = createSchema({
     block: [
       blocksContainBlocksOrInlines,
       atLeastOneChild,
-      inlineVoidAreBetweenTexts,
+      inlinesAreBetweenTexts,
       mergeAdjacentTextNodes,
       removeExtraEmptyTexts,
     ],
@@ -220,7 +220,7 @@ const coreSchema = createSchema({
       inlinesContainInlines,
       atLeastOneChild,
       inlinesAreNotEmpty,
-      inlineVoidAreBetweenTexts,
+      inlinesAreBetweenTexts,
       mergeAdjacentTextNodes,
       removeExtraEmptyTexts,
     ],
@@ -271,7 +271,7 @@ O(1)
 atLeastOneChild,
 
 O(child)
-inlineVoidAreBetweenTexts,
+inlinesAreBetweenTexts,
 
 O(child)
 mergeAdjacentTextNodes,
@@ -292,7 +292,7 @@ O(1)
 inlinesAreNotEmpty,
 
 O(child)
-inlineVoidAreBetweenTexts,
+inlinesAreBetweenTexts,
 
 O(child)
 mergeAdjacentTextNodes,
