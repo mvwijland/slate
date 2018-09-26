@@ -18,6 +18,8 @@ const CORE_SCHEMA_RULES = [
   {
     validateNode(node) {
       if (node.object != 'document') return
+      if (!node.hasInlinesOrTexts()) return
+
       const invalids = node.nodes.filter(n => n.object != 'block')
       if (!invalids.size) return
 
@@ -40,11 +42,14 @@ const CORE_SCHEMA_RULES = [
       if (node.object != 'block') return
       const first = node.nodes.first()
       if (!first) return
-      const objects = first.object == 'block' ? ['block'] : ['inline', 'text']
-      const invalids = node.nodes.filter(n => !objects.includes(n.object))
-      if (!invalids.size) return
+      const valid =
+        first.object == 'block' ? !node.hasInlinesOrTexts() : !node.hasBlocks()
+      if (valid) return
 
       return change => {
+        const objects = first.object == 'block' ? ['block'] : ['inline', 'text']
+        const invalids = node.nodes.filter(n => !objects.includes(n.object))
+
         invalids.forEach(child => {
           change.removeNodeByKey(child.key, { normalize: false })
         })
@@ -61,12 +66,13 @@ const CORE_SCHEMA_RULES = [
   {
     validateNode(node) {
       if (node.object != 'inline') return
-      const invalids = node.nodes.filter(
-        n => n.object != 'inline' && n.object != 'text'
-      )
-      if (!invalids.size) return
+      if (!node.hasBlocks()) return
 
       return change => {
+        const invalids = node.nodes.filter(
+          n => n.object != 'inline' && n.object != 'text'
+        )
+
         invalids.forEach(child => {
           change.removeNodeByKey(child.key, { normalize: false })
         })
@@ -93,7 +99,7 @@ const CORE_SCHEMA_RULES = [
   },
 
   /**
-   * Ensure that inline non-void nodes are never empty.
+   * Ensure that inlines nodes are never empty.
    *
    * This rule is applied to all blocks and inlines, because when they contain an empty
    * inline, we need to remove the empty inline from that parent node. If `validate`
@@ -105,6 +111,7 @@ const CORE_SCHEMA_RULES = [
   {
     validateNode(node) {
       if (node.object != 'inline' && node.object != 'block') return
+      if (!node.hasInlines()) return
 
       const invalids = node.nodes.filter(
         child => child.object === 'inline' && child.isEmpty
@@ -128,7 +135,7 @@ const CORE_SCHEMA_RULES = [
   },
 
   /**
-   * Ensure that inline void nodes are surrounded by text nodes, by adding extra
+   * Ensure that inline nodes are surrounded by text nodes, by adding extra
    * blank text nodes if necessary.
    *
    * @type {Object}
@@ -137,6 +144,7 @@ const CORE_SCHEMA_RULES = [
   {
     validateNode(node) {
       if (node.object != 'block' && node.object != 'inline') return
+      if (!node.hasInlines()) return
 
       const invalids = node.nodes.reduce((list, child, index) => {
         if (child.object !== 'inline') return list
@@ -192,6 +200,7 @@ const CORE_SCHEMA_RULES = [
   {
     validateNode(node) {
       if (node.object != 'block' && node.object != 'inline') return
+      if (!node.hasTexts()) return
 
       const invalids = node.nodes
         .map((child, i) => {
@@ -225,6 +234,7 @@ const CORE_SCHEMA_RULES = [
       if (node.object != 'block' && node.object != 'inline') return
       const { nodes } = node
       if (nodes.size <= 1) return
+      if (!node.hasTexts()) return
 
       const invalids = nodes.filter((desc, i) => {
         if (desc.object != 'text') return
