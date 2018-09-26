@@ -188,10 +188,10 @@ const removeExtraEmptyTexts: Rule = node => {
       const next = nodes.get(i + 1)
 
       // If it's the first node, and the next is a void, preserve it.
-      if (!prev && isInline(next)) return
+      if (!prev && next && isInline(next)) return
 
       // It it's the last node, and the previous is an inline, preserve it.
-      if (!next && isInline(prev)) return
+      if (!next && prev && isInline(prev)) return
 
       // If it's surrounded by inlines, preserve it.
       if (next && prev && isInline(next) && isInline(prev)) return
