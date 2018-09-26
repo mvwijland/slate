@@ -77,7 +77,7 @@ const atLeastOneChild: Rule = node => {
  */
 
 const inlinesAreNotEmpty: Rule = inline => {
-  const valid = inline.isVoid || !inline.isEmpty
+  const valid = !inline.isEmpty
   if (valid) return
 
   return (n, selection) => ({
