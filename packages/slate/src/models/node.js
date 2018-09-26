@@ -1906,7 +1906,7 @@ class Node {
    */
 
   isLeafBlock() {
-    return this.object == 'block' && this.nodes.every(n => n.object != 'block')
+    return this.object == 'block' && !this.hasBlocks()
   }
 
   /**
@@ -1916,9 +1916,7 @@ class Node {
    */
 
   isLeafInline() {
-    return (
-      this.object == 'inline' && this.nodes.every(n => n.object != 'inline')
-    )
+    return this.object == 'inline' && !this.hasInlines()
   }
 
   /**
@@ -2206,8 +2204,6 @@ memoize(Node.prototype, [
   'getTextDirection',
   'getTextsAsArray',
   'getTextsBetweenPositionsAsArray',
-  'isLeafBlock',
-  'isLeafInline',
   'validate',
   'getFirstInvalidDescendant',
 ])
