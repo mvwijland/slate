@@ -1,7 +1,7 @@
 /* @flow */
 
 import type { Value, Document, Node, Range } from '@gitbook/slate'
-import type { List } from 'immutable'
+import { List } from 'immutable'
 import type { SchemaOptions } from './types'
 
 import Schema from './Schema'
@@ -66,7 +66,9 @@ function normalizeChildren({
   let noChange = true
   let validatedSelection = selection
 
-  let validatedChildren = children.map(child => {
+  let validatedChildren = []
+
+  children.forEach(child => {
     const validated = normalizeNode({
       schema,
       node: child,
@@ -74,12 +76,12 @@ function normalizeChildren({
     })
 
     if (validated.node === child) {
-      return child
+      validatedChildren.push(child)
     } else {
       noChange = false
 
       validatedSelection = validated.selection
-      return validated.node
+      validatedChildren.push(validated.node)
     }
   })
 
@@ -87,7 +89,7 @@ function normalizeChildren({
   if (noChange) {
     validatedChildren = children
   } else {
-    validatedChildren = validatedChildren.filter(Boolean)
+    validatedChildren = List(validatedChildren.filter(Boolean))
   }
 
   return {
