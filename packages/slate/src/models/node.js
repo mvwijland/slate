@@ -13,16 +13,6 @@ import Text from './text'
 import generateKey from '../utils/generate-key'
 import memoize from '../utils/memoize'
 
-// Binary values to represent a node's object
-const BINARY_BLOCK = 0b100
-const BINARY_INLINE = 0b010
-const BINARY_TEXT = 0b001
-const BINARY_OBJECT = {
-  block: BINARY_BLOCK,
-  inline: BINARY_INLINE,
-  text: BINARY_TEXT,
-}
-
 /**
  * Node.
  *
@@ -543,43 +533,6 @@ class Node {
 
     // Exclude this node itself.
     return ancestors.rest().findLast(iterator)
-  }
-
-  /**
-   * Get the set of this node's direct child objects
-   *
-   * Returns a set encoded as a binary number. You can use utils
-   * node.hasBlock, node.hasText etc. to make use of this.
-   *
-   * 0b001 for texts, 0b010 for inlines, 0b100 for blocks
-   * @return {Number}
-   */
-
-  getChildObjects() {
-    if (!this.nodes) return 0b000
-
-    return this.nodes.reduce(
-      (acc, child) => acc | BINARY_OBJECT[child.object],
-      0b000
-    )
-  }
-
-  /**
-   * Get the set of this node's direct child types
-   *
-   * Returns a set encoded as a binary number. You can use utils
-   * node.hasBlocks, node.hasTexts etc. to make use of this.
-   *
-   * 0b001 for texts, 0b010 for inlines, 0b100 for blocks
-   * @return {Set<string>}
-   */
-
-  getChildTypes() {
-    if (!this.nodes) return Set()
-
-    return Set().withMutations(set => {
-      this.nodes.forEach(child => set.add(child.type))
-    })
   }
 
   /**
@@ -1751,51 +1704,29 @@ class Node {
   }
 
   /**
-   * Check if a node has blocks as direct children.
+   * Check if a node has block node children.
    *
-   * @param {String | Null} key
+   * @param {String} key
    * @return {Boolean}
    */
 
   hasBlocks(key) {
-    const node = key ? this.assertNode(key) : this
-    return !!(node.getChildObjects() & BINARY_BLOCK)
+    const node = this.assertNode(key)
+    return !!(node.nodes && node.nodes.find(n => n.object === 'block'))
   }
 
   /**
-   * Check if a node has inlines as direct children.
+   * Check if a node has inline node children.
    *
-   * @param {String | Null} key
+   * @param {String} key
    * @return {Boolean}
    */
 
   hasInlines(key) {
-    const node = key ? this.assertNode(key) : this
-    return !!(node.getChildObjects() & BINARY_INLINE)
-  }
-
-  /**
-   * Check if a node has texts as direct children.
-   *
-   * @param {String | Null} key
-   * @return {Boolean}
-   */
-
-  hasTexts(key) {
-    const node = key ? this.assertNode(key) : this
-    return !!(node.getChildObjects() & BINARY_TEXT)
-  }
-
-  /**
-   * Check if a node only has inlines or texts as direct children.
-   *
-   * @param {String | Null} key
-   * @return {Boolean}
-   */
-
-  hasInlinesOrTexts(key) {
-    const node = key ? this.assertNode(key) : this
-    return !!(node.getChildObjects() & (BINARY_INLINE | BINARY_TEXT))
+    const node = this.assertNode(key)
+    return !!(
+      node.nodes && node.nodes.find(n => Inline.isInline(n) || Text.isText(n))
+    )
   }
 
   /**
@@ -1906,7 +1837,7 @@ class Node {
    */
 
   isLeafBlock() {
-    return this.object == 'block' && !this.hasBlocks()
+    return this.object == 'block' && this.nodes.every(n => n.object != 'block')
   }
 
   /**
@@ -1916,7 +1847,9 @@ class Node {
    */
 
   isLeafInline() {
-    return this.object == 'inline' && !this.hasInlines()
+    return (
+      this.object == 'inline' && this.nodes.every(n => n.object != 'inline')
+    )
   }
 
   /**
@@ -2160,8 +2093,6 @@ memoize(Node.prototype, [
   'getBlocksAtRangeAsArray',
   'getBlocksByTypeAsArray',
   'getChild',
-  'getChildObjects',
-  'getChildTypes',
   'getClosestBlock',
   'getClosestInline',
   'getClosestVoid',
@@ -2204,6 +2135,8 @@ memoize(Node.prototype, [
   'getTextDirection',
   'getTextsAsArray',
   'getTextsBetweenPositionsAsArray',
+  'isLeafBlock',
+  'isLeafInline',
   'validate',
   'getFirstInvalidDescendant',
 ])
