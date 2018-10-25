@@ -1,3 +1,5 @@
+/* @flow */
+
 /**
  * Slate-specific model types.
  *
@@ -29,7 +31,7 @@ const MODEL_TYPES = {
  * @return {boolean}
  */
 
-export function isType(type, any) {
+export function isType(type: string, any: any): boolean {
   return !!(any && any[MODEL_TYPES[type]])
 }
 

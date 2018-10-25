@@ -1,10 +1,20 @@
+/* @flow */
+
 import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
 import { List, Record, Set } from 'immutable'
 
+import type { ModelObject } from './types'
 import MODEL_TYPES, { isType } from '../constants/model-types'
 import Character from './character'
 import Mark from './mark'
+
+export type LeafAttributes = {|
+  text?: string,
+  marks?: ListLike<*>,
+|}
+
+type ListLike<T> = List<T> | Array<T>
 
 /**
  * Default properties.
@@ -31,9 +41,9 @@ class Leaf extends Record(DEFAULTS) {
    * @return {Leaf}
    */
 
-  static create(attrs = {}) {
+  static create(attrs: Leaf | LeafAttributes | string = {}): Leaf {
     if (Leaf.isLeaf(attrs)) {
-      return attrs
+      return ((attrs: any): Leaf)
     }
 
     if (typeof attrs == 'string') {
@@ -41,7 +51,7 @@ class Leaf extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Leaf.fromJSON(attrs)
+      return Leaf.fromJSON(((attrs: any): LeafAttributes))
     }
 
     throw new Error(
@@ -56,7 +66,7 @@ class Leaf extends Record(DEFAULTS) {
    * @return {List<Leaf>}
    */
 
-  static createLeaves(leaves) {
+  static createLeaves(leaves: List<Leaf>) {
     if (leaves.size <= 1) return leaves
 
     let invalid = false
@@ -108,7 +118,7 @@ class Leaf extends Record(DEFAULTS) {
    * @return {Array<List<Leaf>>}
    */
 
-  static splitLeaves(leaves, offset) {
+  static splitLeaves(leaves: List<Leaf>, offset: number): Array<List<Leaf>> {
     if (offset < 0) return [List(), leaves]
 
     if (leaves.size === 0) {
@@ -165,7 +175,7 @@ class Leaf extends Record(DEFAULTS) {
    * @return {List<Leaf>}
    */
 
-  static createList(attrs = []) {
+  static createList(attrs: ListLike<Leaf | LeafAttributes> = []) {
     if (List.isList(attrs) || Array.isArray(attrs)) {
       const list = new List(attrs.map(Leaf.create))
       return list
@@ -183,7 +193,7 @@ class Leaf extends Record(DEFAULTS) {
    * @return {Leaf}
    */
 
-  static fromJSON(object) {
+  static fromJSON(object: LeafAttributes) {
     const { text = '', marks = [] } = object
 
     const leaf = new Leaf({
@@ -216,7 +226,7 @@ class Leaf extends Record(DEFAULTS) {
    * @return {Boolean}
    */
 
-  static isLeafList(any) {
+  static isLeafList(any: any): boolean {
     return List.isList(any) && any.every(item => Leaf.isLeaf(item))
   }
 
@@ -226,7 +236,7 @@ class Leaf extends Record(DEFAULTS) {
    * @return {String}
    */
 
-  get object() {
+  get object(): ModelObject {
     return 'leaf'
   }
 
@@ -244,7 +254,7 @@ class Leaf extends Record(DEFAULTS) {
    * @return {List<Character>}
    */
 
-  getCharacters() {
+  getCharacters(): List<Character> {
     logger.deprecate(
       'slate@0.34.0',
       'The `characters` property of Slate objects is deprecated'
@@ -271,7 +281,7 @@ class Leaf extends Record(DEFAULTS) {
    * @returns {Leaf}
    */
 
-  updateMark(mark, newMark) {
+  updateMark(mark: Mark, newMark: Mark): Leaf {
     const { marks } = this
     if (newMark.equals(mark)) return this
     if (!marks.has(mark)) return this
@@ -285,10 +295,10 @@ class Leaf extends Record(DEFAULTS) {
    * Add a `set` of marks at `index` and `length`.
    *
    * @param {Set<Mark>} set
-   * @returns {Text}
+   * @returns {Leaf}
    */
 
-  addMarks(set) {
+  addMarks(set: Set<Mark>): Leaf {
     const { marks } = this
     return this.set('marks', marks.union(set))
   }
@@ -297,10 +307,10 @@ class Leaf extends Record(DEFAULTS) {
    * Remove a `mark` at `index` and `length`.
    *
    * @param {Mark} mark
-   * @returns {Text}
+   * @returns {Leaf}
    */
 
-  removeMark(mark) {
+  removeMark(mark: Mark): Leaf {
     const { marks } = this
     return this.set('marks', marks.remove(mark))
   }

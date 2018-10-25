@@ -1,3 +1,5 @@
+/* @flow */
+
 import Block from './models/block'
 import Change from './models/change'
 import Changes from './changes'

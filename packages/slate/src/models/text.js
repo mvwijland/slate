@@ -1,11 +1,27 @@
+/* @flow */
+
 import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
 import { List, OrderedSet, Record, Set } from 'immutable'
 
+import type { ModelObject } from './types'
 import Leaf from './leaf'
 import MODEL_TYPES, { isType } from '../constants/model-types'
 import generateKey from '../utils/generate-key'
 import memoize from '../utils/memoize'
+
+type ListLike<T> = List<T> | Array<T>
+
+export type TextAttributes =
+  | {|
+      key?: string,
+      leaves?: ListLike<*>,
+    |}
+  | {|
+      text: string,
+      marks: *,
+      key: string,
+    |}
 
 /**
  * Default properties.
@@ -32,9 +48,9 @@ class Text extends Record(DEFAULTS) {
    * @return {Text}
    */
 
-  static create(attrs = '') {
+  static create(attrs: Text | TextAttributes | string = ''): Text {
     if (Text.isText(attrs)) {
-      return attrs
+      return ((attrs: any): Text)
     }
 
     if (typeof attrs == 'string') {
@@ -62,7 +78,7 @@ class Text extends Record(DEFAULTS) {
    * @return {List<Text>}
    */
 
-  static createList(elements = []) {
+  static createList(elements: ListLike<Text | TextAttributes> = []) {
     if (List.isList(elements) || Array.isArray(elements)) {
       const list = new List(elements.map(Text.create))
       return list
@@ -80,13 +96,13 @@ class Text extends Record(DEFAULTS) {
    * @return {Text}
    */
 
-  static fromJSON(object) {
+  static fromJSON(object: TextAttributes | Text): Text {
     if (Text.isText(object)) {
-      return object
+      return ((object: any): Text)
     }
 
     const { key = generateKey() } = object
-    let { leaves = List() } = object
+    let { leaves = List() } = ((object: any): TextAttributes)
 
     if (Array.isArray(leaves)) {
       leaves = List(leaves.map(x => Leaf.create(x)))
@@ -126,7 +142,7 @@ class Text extends Record(DEFAULTS) {
    * @return {Boolean}
    */
 
-  static isTextList(any) {
+  static isTextList(any: any): boolean {
     return List.isList(any) && any.every(item => Text.isText(item))
   }
 
@@ -136,7 +152,7 @@ class Text extends Record(DEFAULTS) {
    * @return {String}
    */
 
-  get object() {
+  get object(): ModelObject {
     return 'text'
   }
 
