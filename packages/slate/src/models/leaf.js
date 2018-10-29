@@ -4,7 +4,7 @@ import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
 import { List, Record, Set } from 'immutable'
 
-import type { ModelObject } from './types'
+import type { ModelObject, ListLike } from './types'
 import MODEL_TYPES, { isType } from '../constants/model-types'
 import Character from './character'
 import Mark from './mark'
@@ -13,8 +13,6 @@ export type LeafAttributes = {|
   text?: string,
   marks?: ListLike<*>,
 |}
-
-type ListLike<T> = List<T> | Array<T>
 
 /**
  * Default properties.

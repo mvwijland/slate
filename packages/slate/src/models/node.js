@@ -1,17 +1,32 @@
+/* @flow */
+
+import type { Component } from 'react'
 import direction from 'direction'
 import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
-import { List, OrderedSet, Set } from 'immutable'
+import { List, OrderedSet, Set, type Map } from 'immutable'
 
+import type { ModelObject, ListLike, Key, Path } from './types'
 import Data from './data'
-import Block from './block'
-import Inline from './inline'
-import Document from './document'
+import Block, { type BlockAttributes } from './block'
+import Inline, { type InlineAttributes } from './inline'
+import Document, { type DocumentAttributes } from './document'
 import { isType } from '../constants/model-types'
 import Range from './range'
-import Text from './text'
+import Text, { type TextAttributes } from './text'
+import type Schema from './schema'
 import generateKey from '../utils/generate-key'
 import memoize from '../utils/memoize'
+
+export type NodeAttributes = {
+  key?: Key,
+  object?: ModelObject,
+  kind?: ModelObject,
+  type?: string,
+  isVoid?: boolean,
+  nodes?: ListLike<NodeAttributes>,
+  data?: Object | Data | Map<string, any>,
+}
 
 /**
  * Node.
@@ -30,9 +45,9 @@ class Node {
    * @return {Node}
    */
 
-  static create(attrs = {}) {
+  static create(attrs: NodeAttributes = {}): Node {
     if (Node.isNode(attrs)) {
-      return attrs
+      return ((attrs: any): Node)
     }
 
     if (isPlainObject(attrs)) {
@@ -49,13 +64,13 @@ class Node {
 
       switch (object) {
         case 'block':
-          return Block.create(attrs)
+          return Block.create(((attrs: any): BlockAttributes))
         case 'document':
-          return Document.create(attrs)
+          return Document.create(((attrs: any): DocumentAttributes))
         case 'inline':
-          return Inline.create(attrs)
+          return Inline.create(((attrs: any): InlineAttributes))
         case 'text':
-          return Text.create(attrs)
+          return Text.create(((attrs: any): TextAttributes))
 
         default: {
           throw new Error('`Node.create` requires a `object` string.')
@@ -75,7 +90,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  static createList(elements = []) {
+  static createList(elements: ListLike<NodeAttributes> = []) {
     if (List.isList(elements) || Array.isArray(elements)) {
       const list = List(elements.map(Node.create))
       return list
@@ -93,7 +108,7 @@ class Node {
    * @return {Object}
    */
 
-  static createProperties(attrs = {}) {
+  static createProperties(attrs: NodeAttributes = {}) {
     if (Block.isBlock(attrs) || Inline.isInline(attrs)) {
       return {
         data: attrs.data,
@@ -126,7 +141,7 @@ class Node {
    * @return {Node}
    */
 
-  static fromJSON(value) {
+  static fromJSON(value: Object): Node {
     let { object } = value
 
     if (!object && value.kind) {
@@ -169,7 +184,7 @@ class Node {
    * @return {Boolean}
    */
 
-  static isNode(any) {
+  static isNode(any: any): boolean {
     return !!['BLOCK', 'DOCUMENT', 'INLINE', 'TEXT'].find(type =>
       isType(type, any)
     )
@@ -182,9 +197,14 @@ class Node {
    * @return {Boolean}
    */
 
-  static isNodeList(any) {
+  static isNodeList(any: any): boolean {
     return List.isList(any) && any.every(item => Node.isNode(item))
   }
+
+  object: ModelObject
+  type: string
+  key: Key
+  nodes: List<Node>
 
   /**
    * True if the node has both descendants in that order, false otherwise. The
@@ -195,7 +215,7 @@ class Node {
    * @return {Boolean}
    */
 
-  areDescendantsSorted(first, second) {
+  areDescendantsSorted(first: Key, second: Key) {
     first = assertKey(first)
     second = assertKey(second)
 
@@ -214,7 +234,7 @@ class Node {
    * @return {Node}
    */
 
-  assertChild(key) {
+  assertChild(key: Key): Node {
     const child = this.getChild(key)
 
     if (!child) {
@@ -232,7 +252,7 @@ class Node {
    * @return {Node}
    */
 
-  assertDescendant(key) {
+  assertDescendant(key: Key): Node {
     const descendant = this.getDescendant(key)
 
     if (!descendant) {
@@ -250,7 +270,7 @@ class Node {
    * @return {Node}
    */
 
-  assertNode(key) {
+  assertNode(key: Key): Node {
     const node = this.getNode(key)
 
     if (!node) {
@@ -268,7 +288,7 @@ class Node {
    * @return {Node}
    */
 
-  assertPath(path) {
+  assertPath(path: Path): Node {
     const descendant = this.getDescendantAtPath(path)
 
     if (!descendant) {
@@ -285,7 +305,9 @@ class Node {
    * @return {List<Node>}
    */
 
-  filterDescendants(iterator) {
+  filterDescendants(
+    iterator: (Node, number, List<Node>) => boolean
+  ): List<Node> {
     const matches = []
 
     this.forEachDescendant((node, i, nodes) => {
@@ -302,7 +324,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  findDescendant(iterator) {
+  findDescendant(iterator: (Node, number, List<Node>) => boolean): ?Node {
     let found = null
 
     this.forEachDescendant((node, i, nodes) => {
@@ -322,7 +344,7 @@ class Node {
    * @param {Function} iterator
    */
 
-  forEachDescendant(iterator) {
+  forEachDescendant(iterator: (Node, number, List<Node>) => ?boolean): void {
     let ret
 
     this.nodes.forEach((child, i, nodes) => {
@@ -347,7 +369,7 @@ class Node {
    * @return {List<Node>|Null}
    */
 
-  getAncestors(key) {
+  getAncestors(key: Key | Node): ?List<Node> {
     key = assertKey(key)
 
     if (key == this.key) return List()
@@ -374,7 +396,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getBlocks() {
+  getBlocks(): List<Block> {
     const array = this.getBlocksAsArray()
     return new List(array)
   }
@@ -385,7 +407,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getBlocksAsArray() {
+  getBlocksAsArray(): Array<Block> {
     return this.nodes.reduce((array, child) => {
       if (child.object != 'block') return array
       if (!child.isLeafBlock()) return array.concat(child.getBlocksAsArray())
@@ -401,7 +423,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getBlocksAtRange(range) {
+  getBlocksAtRange(range: Range): List<Block> {
     const array = this.getBlocksAtRangeAsArray(range)
     // Eliminate duplicates by converting to an `OrderedSet` first.
     return new List(new OrderedSet(array))
@@ -414,7 +436,7 @@ class Node {
    * @return {Array}
    */
 
-  getBlocksAtRangeAsArray(range) {
+  getBlocksAtRangeAsArray(range: Range): Array<Block> {
     range = range.normalize(this)
     if (range.isUnset) return []
 
@@ -439,7 +461,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getBlocksByType(type) {
+  getBlocksByType(type: string): List<Block> {
     const array = this.getBlocksByTypeAsArray(type)
     return new List(array)
   }
@@ -451,7 +473,7 @@ class Node {
    * @return {Array}
    */
 
-  getBlocksByTypeAsArray(type) {
+  getBlocksByTypeAsArray(type: string): List<Block> {
     return this.nodes.reduce((array, node) => {
       if (node.object != 'block') {
         return array
@@ -470,7 +492,7 @@ class Node {
    * @return {List<Character>}
    */
 
-  getCharacters() {
+  getCharacters(): List<Character> {
     return this.getTexts().flatMap(t => t.characters)
   }
 
@@ -481,7 +503,7 @@ class Node {
    * @return {List<Character>}
    */
 
-  getCharactersAtRange(range) {
+  getCharactersAtRange(range: Range): List<Character> {
     range = range.normalize(this)
     if (range.isUnset) return List()
     const { startKey, endKey, startOffset, endOffset } = range
@@ -510,7 +532,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getChild(key) {
+  getChild(key: Key): ?Node {
     key = assertKey(key)
     return this.nodes.find(node => node.key == key)
   }
@@ -523,7 +545,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getClosest(key, iterator) {
+  getClosest(key: Key, iterator: (Node, number, List<Node>) => boolean): ?Node {
     key = assertKey(key)
     const ancestors = this.getAncestors(key)
 
@@ -542,7 +564,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getClosestBlock(key) {
+  getClosestBlock(key: Key): ?Block {
     return this.getClosest(key, parent => parent.object == 'block')
   }
 
@@ -553,7 +575,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getClosestInline(key) {
+  getClosestInline(key: Key): ?Inline {
     return this.getClosest(key, parent => parent.object == 'inline')
   }
 
@@ -564,7 +586,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getClosestVoid(key) {
+  getClosestVoid(key: Key): ?Node {
     return this.getClosest(key, parent => parent.isVoid)
   }
 
@@ -576,7 +598,7 @@ class Node {
    * @return {Node}
    */
 
-  getCommonAncestor(one, two) {
+  getCommonAncestor(one: Key, two: Key): ?Node {
     one = assertKey(one)
     two = assertKey(two)
 
@@ -607,7 +629,7 @@ class Node {
    * @return {List}
    */
 
-  getDecorations(stack) {
+  getDecorations(stack: Stack): List<Decoration> {
     const decorations = stack.find('decorateNode', this)
     const list = Range.createList(decorations || [])
     return list
@@ -621,7 +643,7 @@ class Node {
    * @return {Number} depth
    */
 
-  getDepth(key, startAt = 1) {
+  getDepth(key: Key, startAt?: number = 1): number {
     this.assertDescendant(key)
     if (this.hasChild(key)) return startAt
     return this.getFurthestAncestor(key).getDepth(key, startAt + 1)
@@ -634,7 +656,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getDescendant(key) {
+  getDescendant(key: Key): ?Node {
     key = assertKey(key)
     let descendantFound = null
 
@@ -659,7 +681,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getDescendantAtPath(path) {
+  getDescendantAtPath(path: Path): ?Node {
     let descendant = this
 
     for (const index of path) {
@@ -677,7 +699,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getFirstText() {
+  getFirstText(): ?Text {
     let descendantFound = null
 
     const found = this.nodes.find(node => {
@@ -696,7 +718,7 @@ class Node {
    * @return {Document}
    */
 
-  getFragmentAtRange(range) {
+  getFragmentAtRange(range: Range): Document {
     range = range.normalize(this)
     if (range.isUnset) return Document.create()
 
@@ -766,7 +788,10 @@ class Node {
    * @return {Node|Null}
    */
 
-  getFurthest(key, iterator) {
+  getFurthest(
+    key: Key,
+    iterator: (Node, number, List<Node>) => boolean
+  ): ?Node {
     const ancestors = this.getAncestors(key)
 
     if (!ancestors) {
@@ -785,7 +810,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getFurthestBlock(key) {
+  getFurthestBlock(key: Key): ?Block {
     return this.getFurthest(key, node => node.object == 'block')
   }
 
@@ -796,7 +821,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getFurthestInline(key) {
+  getFurthestInline(key: Key): ?Inline {
     return this.getFurthest(key, node => node.object == 'inline')
   }
 
@@ -807,7 +832,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getFurthestAncestor(key) {
+  getFurthestAncestor(key: Key): ?Node {
     key = assertKey(key)
     return this.nodes.find(node => {
       if (node.key == key) return true
@@ -823,7 +848,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getFurthestOnlyChildAncestor(key) {
+  getFurthestOnlyChildAncestor(key: Key): ?Node {
     const ancestors = this.getAncestors(key)
 
     if (!ancestors) {
@@ -849,7 +874,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getInlines() {
+  getInlines(): List<Inline> {
     const array = this.getInlinesAsArray()
     return new List(array)
   }
@@ -860,7 +885,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getInlinesAsArray() {
+  getInlinesAsArray(): Array<Inline> {
     let array = []
 
     this.nodes.forEach(child => {
@@ -883,7 +908,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getInlinesAtRange(range) {
+  getInlinesAtRange(range: Range): List<Inline> {
     const array = this.getInlinesAtRangeAsArray(range)
     // Remove duplicates by converting it to an `OrderedSet` first.
     return new List(new OrderedSet(array))
@@ -896,7 +921,7 @@ class Node {
    * @return {Array}
    */
 
-  getInlinesAtRangeAsArray(range) {
+  getInlinesAtRangeAsArray(range: Range): List<Inline> {
     range = range.normalize(this)
     if (range.isUnset) return []
 
@@ -912,7 +937,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getInlinesByType(type) {
+  getInlinesByType(type: string): List<Inline> {
     const array = this.getInlinesByTypeAsArray(type)
     return new List(array)
   }
@@ -924,7 +949,7 @@ class Node {
    * @return {Array}
    */
 
-  getInlinesByTypeAsArray(type) {
+  getInlinesByTypeAsArray(type: string): Array<Inline> {
     return this.nodes.reduce((inlines, node) => {
       if (node.object == 'text') {
         return inlines
@@ -943,7 +968,7 @@ class Node {
    * @return {Array<String>}
    */
 
-  getKeysAsArray() {
+  getKeysAsArray(): Array<Key> {
     const keys = []
 
     this.forEachDescendant(desc => {
@@ -959,7 +984,7 @@ class Node {
    * @return {Set<String>}
    */
 
-  getKeys() {
+  getKeys(): Set<Key> {
     const keys = this.getKeysAsArray()
     return new Set(keys)
   }
@@ -970,7 +995,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getLastText() {
+  getLastText(): ?Text {
     let descendantFound = null
 
     const found = this.nodes.findLast(node => {
@@ -988,7 +1013,7 @@ class Node {
    * @return {Set<Mark>}
    */
 
-  getMarks() {
+  getMarks(): Set<Mark> {
     const array = this.getMarksAsArray()
     return new Set(array)
   }
@@ -999,7 +1024,7 @@ class Node {
    * @return {OrderedSet<Mark>}
    */
 
-  getOrderedMarks() {
+  getOrderedMarks(): OrderedSet<Mark> {
     const array = this.getMarksAsArray()
     return new OrderedSet(array)
   }
@@ -1010,7 +1035,7 @@ class Node {
    * @return {Array}
    */
 
-  getMarksAsArray() {
+  getMarksAsArray(): Array<Mark> {
     // PERF: use only one concat rather than multiple concat
     // becuase one concat is faster
     const result = []
@@ -1028,7 +1053,7 @@ class Node {
    * @return {Set<Mark>}
    */
 
-  getMarksAtRange(range) {
+  getMarksAtRange(range: Range): Set<Mark> {
     return new Set(this.getOrderedMarksAtRange(range))
   }
 
@@ -1039,7 +1064,7 @@ class Node {
    * @return {Set<Mark>}
    */
 
-  getInsertMarksAtRange(range) {
+  getInsertMarksAtRange(range: Range): Set<Mark> {
     range = range.normalize(this)
     if (range.isUnset) return Set()
 
@@ -1060,7 +1085,7 @@ class Node {
    * @return {OrderedSet<Mark>}
    */
 
-  getOrderedMarksAtRange(range) {
+  getOrderedMarksAtRange(range: Range): OrderedSet<Mark> {
     range = range.normalize(this)
     if (range.isUnset) return OrderedSet()
 
@@ -1089,7 +1114,12 @@ class Node {
    * @returns {OrderedSet<Mark>}
    */
 
-  getOrderedMarksBetweenPositions(startKey, startOffset, endKey, endOffset) {
+  getOrderedMarksBetweenPositions(
+    startKey: Key,
+    startOffset: number,
+    endKey: Key,
+    endOffset: number
+  ): OrderedSet<Mark> {
     if (startKey === endKey) {
       const startText = this.getDescendant(startKey)
       return startText.getMarksBetweenOffsets(startOffset, endOffset)
@@ -1119,7 +1149,7 @@ class Node {
    * @return {Set<Mark>}
    */
 
-  getActiveMarksAtRange(range) {
+  getActiveMarksAtRange(range: Range): Set<Mark> {
     range = range.normalize(this)
     if (range.isUnset) return Set()
 
@@ -1181,7 +1211,7 @@ class Node {
    * @return {Set}
    */
 
-  getMarksAtPosition(key, offset) {
+  getMarksAtPosition(key: Key, offset: number): Set<Mark> {
     const text = this.getDescendant(key)
     const currentMarks = text.getMarksAtIndex(offset)
     if (offset !== 0) return currentMarks
@@ -1209,7 +1239,7 @@ class Node {
    * @return {Set<Mark>}
    */
 
-  getMarksByType(type) {
+  getMarksByType(type: string): Set<Mark> {
     const array = this.getMarksByTypeAsArray(type)
     return new Set(array)
   }
@@ -1221,7 +1251,7 @@ class Node {
    * @return {OrderedSet<Mark>}
    */
 
-  getOrderedMarksByType(type) {
+  getOrderedMarksByType(type: string): OrderedSet<Mark> {
     const array = this.getMarksByTypeAsArray(type)
     return new OrderedSet(array)
   }
@@ -1233,7 +1263,7 @@ class Node {
    * @return {Array}
    */
 
-  getMarksByTypeAsArray(type) {
+  getMarksByTypeAsArray(type: string): Array<Mark> {
     return this.nodes.reduce((array, node) => {
       return node.object == 'text'
         ? array.concat(node.getMarksAsArray().filter(m => m.type == type))
@@ -1248,7 +1278,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getNextBlock(key) {
+  getNextBlock(key: Key): ?Block {
     const child = this.assertDescendant(key)
     let last
 
@@ -1272,7 +1302,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getNextSibling(key) {
+  getNextSibling(key: Key): ?Node {
     key = assertKey(key)
 
     const parent = this.getParent(key)
@@ -1291,7 +1321,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getNextText(key) {
+  getNextText(key: Key): ?Text {
     key = assertKey(key)
     return this.getTexts()
       .skipUntil(text => text.key == key)
@@ -1305,7 +1335,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getNode(key) {
+  getNode(key: Key): ?Node {
     key = assertKey(key)
     return this.key == key ? this : this.getDescendant(key)
   }
@@ -1317,7 +1347,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getNodeAtPath(path) {
+  getNodeAtPath(path: Path): ?Node {
     return path.length ? this.getDescendantAtPath(path) : this
   }
 
@@ -1328,7 +1358,7 @@ class Node {
    * @return {Number}
    */
 
-  getOffset(key) {
+  getOffset(key: Key): number {
     this.assertDescendant(key)
 
     // Calculate the offset of the nodes before the highest child.
@@ -1348,7 +1378,7 @@ class Node {
    * @return {Number}
    */
 
-  getOffsetAtRange(range) {
+  getOffsetAtRange(range: Range): number {
     range = range.normalize(this)
 
     if (range.isUnset) {
@@ -1370,7 +1400,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getParent(key) {
+  getParent(key: Key): ?Node {
     if (this.hasChild(key)) return this
 
     let node = null
@@ -1394,9 +1424,14 @@ class Node {
    * @return {Array}
    */
 
-  getPath(key) {
+  getPath(key: Key): Path {
     let child = this.assertNode(key)
     const ancestors = this.getAncestors(key)
+
+    if (!ancestors) {
+      throw new Error('Could not find ancestors')
+    }
+
     const path = []
 
     ancestors.reverse().forEach(ancestor => {
@@ -1416,7 +1451,7 @@ class Node {
    * @return {Array}
    */
 
-  refindPath(path, key) {
+  refindPath(path: Path, key: Key): Path {
     const node = this.getDescendantAtPath(path)
 
     if (node && node.key === key) {
@@ -1435,7 +1470,7 @@ class Node {
    * @return {Node|Void}
    */
 
-  refindNode(path, key) {
+  refindNode(path: Path, key: Key): ?Node {
     const node = this.getDescendantAtPath(path)
 
     if (node && node.key === key) {
@@ -1452,7 +1487,7 @@ class Node {
    * @return {Component|Void}
    */
 
-  getPlaceholder(schema) {
+  getPlaceholder(schema: Schema): ?Component<any> {
     return schema.__getPlaceholder(this)
   }
 
@@ -1463,7 +1498,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getPreviousBlock(key) {
+  getPreviousBlock(key: Key): ?Block {
     const child = this.assertDescendant(key)
     let first
 
@@ -1487,7 +1522,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getPreviousSibling(key) {
+  getPreviousSibling(key: Key): ?Node {
     key = assertKey(key)
     const parent = this.getParent(key)
     const before = parent.nodes.takeUntil(child => child.key == key)
@@ -1506,7 +1541,7 @@ class Node {
    * @return {Node|Null}
    */
 
-  getPreviousText(key) {
+  getPreviousText(key: Key): ?Text {
     key = assertKey(key)
     return this.getTexts()
       .takeUntil(text => text.key == key)
@@ -1523,7 +1558,10 @@ class Node {
    * @return {Object|Null}
    */
 
-  getSelectionIndexes(range, isSelected = true) {
+  getSelectionIndexes(
+    range: Range,
+    isSelected?: boolean = true
+  ): ?{ start: number, end: number } {
     const { startKey, endKey } = range
 
     // PERF: if we're not selected, we can exit early.
@@ -1572,7 +1610,7 @@ class Node {
    * @return {String}
    */
 
-  getText() {
+  getText(): string {
     return this.nodes.reduce((string, node) => {
       return string + node.text
     }, '')
@@ -1581,11 +1619,11 @@ class Node {
   /**
    * Get the descendent text node at an `offset`.
    *
-   * @param {String} offset
+   * @param {Number} offset
    * @return {Node|Null}
    */
 
-  getTextAtOffset(offset) {
+  getTextAtOffset(offset: number): ?Text {
     // PERF: Add a few shortcuts for the obvious cases.
     if (offset == 0) return this.getFirstText()
     if (offset == this.text.length) return this.getLastText()
@@ -1605,7 +1643,7 @@ class Node {
    * @return {String}
    */
 
-  getTextDirection() {
+  getTextDirection(): 'rtl' | 'ltr' | void {
     const dir = direction(this.text)
     return dir == 'neutral' ? undefined : dir
   }
@@ -1616,7 +1654,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getTexts() {
+  getTexts(): List<Node> {
     const array = this.getTextsAsArray()
     return new List(array)
   }
@@ -1627,7 +1665,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getTextsAsArray() {
+  getTextsAsArray(): Array<Text> {
     let array = []
 
     this.nodes.forEach(node => {
@@ -1648,7 +1686,7 @@ class Node {
    * @return {List<Node>}
    */
 
-  getTextsAtRange(range) {
+  getTextsAtRange(range: Range): List<Text> {
     range = range.normalize(this)
     if (range.isUnset) return List()
     const { startKey, endKey } = range
@@ -1664,7 +1702,7 @@ class Node {
    * @returns {Array}
    */
 
-  getTextsBetweenPositionsAsArray(startKey, endKey) {
+  getTextsBetweenPositionsAsArray(startKey: Key, endKey: Key): Array<Text> {
     const startText = this.getDescendant(startKey)
 
     // PERF: the most common case is when the range is in a single text node,
@@ -1685,7 +1723,7 @@ class Node {
    * @return {Array}
    */
 
-  getTextsAtRangeAsArray(range) {
+  getTextsAtRangeAsArray(range: Range): Array<Text> {
     range = range.normalize(this)
     if (range.isUnset) return []
     const { startKey, endKey } = range
@@ -1699,7 +1737,7 @@ class Node {
    * @return {Boolean}
    */
 
-  hasChild(key) {
+  hasChild(key: Key): boolean {
     return !!this.getChild(key)
   }
 
@@ -1710,7 +1748,7 @@ class Node {
    * @return {Boolean}
    */
 
-  hasBlocks(key) {
+  hasBlocks(key: Key): boolean {
     const node = this.assertNode(key)
     return !!(node.nodes && node.nodes.find(n => n.object === 'block'))
   }
@@ -1722,7 +1760,7 @@ class Node {
    * @return {Boolean}
    */
 
-  hasInlines(key) {
+  hasInlines(key: Key): boolean {
     const node = this.assertNode(key)
     return !!(
       node.nodes && node.nodes.find(n => Inline.isInline(n) || Text.isText(n))
@@ -1736,7 +1774,7 @@ class Node {
    * @return {Boolean}
    */
 
-  hasDescendant(key) {
+  hasDescendant(key: Key): boolean {
     return !!this.getDescendant(key)
   }
 
@@ -1747,7 +1785,7 @@ class Node {
    * @return {Boolean}
    */
 
-  hasNode(key) {
+  hasNode(key: Key): boolean {
     return !!this.getNode(key)
   }
 
@@ -1758,7 +1796,7 @@ class Node {
    * @return {Boolean}
    */
 
-  hasVoidParent(key) {
+  hasVoidParent(key: Key): boolean {
     return !!this.getClosestVoid(key)
   }
 
@@ -1770,7 +1808,7 @@ class Node {
    * @return {Node}
    */
 
-  insertNode(index, node) {
+  insertNode(index: number, node: Node): Node {
     const keys = this.getKeysAsArray()
 
     if (keys.includes(node.key)) {
@@ -1794,7 +1832,7 @@ class Node {
    * @return {Boolean}
    */
 
-  isInRange(range) {
+  isInRange(range: Range): boolean {
     range = range.normalize(this)
 
     const node = this
@@ -1836,7 +1874,7 @@ class Node {
    * @return {Boolean}
    */
 
-  isLeafBlock() {
+  isLeafBlock(): boolean {
     return this.object == 'block' && this.nodes.every(n => n.object != 'block')
   }
 
@@ -1846,7 +1884,7 @@ class Node {
    * @return {Boolean}
    */
 
-  isLeafInline() {
+  isLeafInline(): boolean {
     return (
       this.object == 'inline' && this.nodes.every(n => n.object != 'inline')
     )
@@ -1862,7 +1900,7 @@ class Node {
    * @return {Node}
    */
 
-  mergeNode(withIndex, index) {
+  mergeNode(withIndex: number, index: number) {
     let node = this
     let one = node.nodes.get(withIndex)
     const two = node.nodes.get(index)
@@ -1898,7 +1936,7 @@ class Node {
    * @return {Node}
    */
 
-  mapChildren(iterator) {
+  mapChildren(iterator: (Node, number, List<Node>) => Node): Node {
     let { nodes } = this
 
     nodes.forEach((node, i) => {
@@ -1917,7 +1955,7 @@ class Node {
    * @return {Node}
    */
 
-  mapDescendants(iterator) {
+  mapDescendants(iterator: (Node, number, List<Node>) => Node): Node {
     let { nodes } = this
 
     nodes.forEach((node, index) => {
@@ -1938,7 +1976,7 @@ class Node {
    * @return {Node}
    */
 
-  regenerateKey() {
+  regenerateKey(): Node {
     const key = generateKey()
     return this.set('key', key)
   }
@@ -1950,7 +1988,7 @@ class Node {
    * @return {Node}
    */
 
-  removeDescendant(key) {
+  removeDescendant(key: Key): Node {
     key = assertKey(key)
 
     let node = this
@@ -1973,7 +2011,7 @@ class Node {
    * @return {Node}
    */
 
-  removeNode(index) {
+  removeNode(index: number): Node {
     const nodes = this.nodes.delete(index)
     return this.set('nodes', nodes)
   }
@@ -1986,7 +2024,7 @@ class Node {
    * @return {Node}
    */
 
-  splitNode(index, position) {
+  splitNode(index: number, position: number): Node {
     let node = this
     const child = node.nodes.get(index)
     let one
@@ -2019,7 +2057,7 @@ class Node {
    * @return {Node}
    */
 
-  updateNode(node) {
+  updateNode(node: Node): Node {
     if (node.key == this.key) {
       return node
     }
@@ -2046,7 +2084,7 @@ class Node {
    * @return {Function|Null}
    */
 
-  validate(schema) {
+  validate(schema: Schema): * {
     return schema.validateNode(this)
   }
 
@@ -2057,7 +2095,7 @@ class Node {
    * @return {Node|Text|Null}
    */
 
-  getFirstInvalidDescendant(schema) {
+  getFirstInvalidDescendant(schema: Schema): ?Node {
     let result = null
 
     this.nodes.find(n => {
@@ -2075,7 +2113,7 @@ class Node {
  * @return {String}
  */
 
-function assertKey(arg) {
+function assertKey(arg: any): Key {
   if (typeof arg == 'string') return arg
   throw new Error(
     `Invalid \`key\` argument! It must be a key string, but you passed: ${arg}`
