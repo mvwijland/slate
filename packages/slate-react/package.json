@@ -1,7 +1,7 @@
 {
   "name": "@gitbook/slate-react",
   "description": "A set of React components for building completely customizable rich-text editors.",
-  "version": "0.13.8",
+  "version": "0.13.9-0",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/slate.git",
   "main": "lib/slate-react.js",
@@ -13,12 +13,12 @@
     "lib/"
   ],
   "dependencies": {
-    "@gitbook/slate-base64-serializer": "^0.2.44",
+    "@gitbook/slate-base64-serializer": "^0.2.45-0",
     "@gitbook/slate-dev-environment": "^0.1.3",
     "@gitbook/slate-dev-logger": "^0.1.40",
     "@gitbook/slate-hotkeys": "^0.1.3",
-    "@gitbook/slate-plain-serializer": "^0.5.25",
-    "@gitbook/slate-prop-types": "^0.4.42",
+    "@gitbook/slate-plain-serializer": "^0.5.26-0",
+    "@gitbook/slate-prop-types": "^0.4.43-0",
     "debug": "^3.1.0",
     "get-window": "^1.1.1",
     "is-window": "^1.0.2",
@@ -36,9 +36,9 @@
     "react-dom": ">=0.14.0"
   },
   "devDependencies": {
-    "@gitbook/slate": "^0.34.10",
-    "@gitbook/slate-hyperscript": "^0.5.25",
-    "@gitbook/slate-simulator": "^0.4.42",
+    "@gitbook/slate": "^0.34.11-0",
+    "@gitbook/slate-hyperscript": "^0.5.26-0",
+    "@gitbook/slate-simulator": "^0.4.43-0",
     "immutable": "^3.8.1",
     "mocha": "^2.5.3"
   },
