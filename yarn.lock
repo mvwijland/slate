@@ -4304,6 +4304,12 @@ he@1.1.x:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
+heapdump@^0.3.10:
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/heapdump/-/heapdump-0.3.10.tgz#c28a7068a7b252c7438d69d97f5ac0c9df424b82"
+  dependencies:
+    nan "^2.11.1"
+
 history@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/history/-/history-4.7.2.tgz#22b5c7f31633c5b8021c7f4a8a954ac139ee8d5b"
@@ -6366,6 +6372,10 @@ mz@^2.3.1:
     any-promise "^1.0.0"
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
+
+nan@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
 
 nan@^2.3.0:
   version "2.8.0"
