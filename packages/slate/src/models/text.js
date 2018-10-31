@@ -727,7 +727,17 @@ class Text extends Record(DEFAULTS) {
    */
 
   validate(schema) {
-    return schema.validateNode(this)
+    if (this.__validForSchema === schema) {
+      return null
+    }
+
+    const result = schema.validateNode(this)
+
+    if (!result) {
+      this.__validForSchema = schema
+    }
+
+    return result
   }
 
   /**
@@ -781,7 +791,6 @@ memoize(Text.prototype, [
   'getActiveMarks',
   'getMarks',
   'getMarksAsArray',
-  'validate',
   'getString',
 ])
 
