@@ -10,7 +10,7 @@ import History from './models/history'
 import Inline from './models/inline'
 import Leaf from './models/leaf'
 import Mark from './models/mark'
-import Node from './models/node'
+import NodeFactory from './models/node-factory'
 import Operation from './models/operation'
 import Operations from './operations'
 import Range from './models/range'
@@ -20,6 +20,8 @@ import Text from './models/text'
 import Value from './models/value'
 import { resetKeyGenerator, setKeyGenerator } from './utils/generate-key'
 import { resetMemoization, useMemoization } from './utils/memoize'
+
+export type { Node } from './models/node'
 
 /**
  * Export.
@@ -38,7 +40,7 @@ export {
   Inline,
   Leaf,
   Mark,
-  Node,
+  NodeFactory,
   Operation,
   Operations,
   Range,
@@ -62,7 +64,7 @@ export default {
   Inline,
   Leaf,
   Mark,
-  Node,
+  NodeFactory,
   Operation,
   Operations,
   Range,
