@@ -5,7 +5,7 @@ import { List, Record } from 'immutable'
 import MODEL_TYPES from '../constants/model-types'
 import OPERATION_ATTRIBUTES from '../constants/operation-attributes'
 import Mark from './mark'
-import Node from './node'
+import NodeFactory from './node'
 import Range from './range'
 import Value from './value'
 
@@ -125,7 +125,7 @@ class Operation extends Record(DEFAULTS) {
       }
 
       if (key == 'node') {
-        v = Node.create(v)
+        v = NodeFactory.create(v)
       }
 
       if (key == 'selection') {
@@ -137,7 +137,7 @@ class Operation extends Record(DEFAULTS) {
       }
 
       if (key == 'properties' && type == 'merge_node') {
-        v = Node.createProperties(v)
+        v = NodeFactory.createProperties(v)
       }
 
       if (key == 'properties' && type == 'set_mark') {
@@ -145,7 +145,7 @@ class Operation extends Record(DEFAULTS) {
       }
 
       if (key == 'properties' && type == 'set_node') {
-        v = Node.createProperties(v)
+        v = NodeFactory.createProperties(v)
       }
 
       if (key == 'properties' && type == 'set_selection') {
@@ -168,7 +168,7 @@ class Operation extends Record(DEFAULTS) {
       }
 
       if (key == 'properties' && type == 'split_node') {
-        v = Node.createProperties(v)
+        v = NodeFactory.createProperties(v)
       }
 
       attrs[key] = v

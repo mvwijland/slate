@@ -1,4 +1,4 @@
-import { Node, Value } from '@gitbook/slate'
+import { NodeFactory, Value } from '@gitbook/slate'
 import { atob, btoa } from 'isomorphic-base64'
 
 /**
@@ -49,7 +49,7 @@ function deserialize(string, options) {
 
 function deserializeNode(string, options) {
   const raw = decode(string)
-  const node = Node.fromJSON(raw, options)
+  const node = NodeFactory.fromJSON(raw, options)
   return node
 }
 
