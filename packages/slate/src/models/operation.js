@@ -5,7 +5,7 @@ import { List, Record } from 'immutable'
 import MODEL_TYPES from '../constants/model-types'
 import OPERATION_ATTRIBUTES from '../constants/operation-attributes'
 import Mark from './mark'
-import NodeUtils from './node'
+import NodeUtils from './node-utils'
 import Range from './range'
 import Value from './value'
 
