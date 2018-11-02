@@ -96,15 +96,34 @@ function memoize(object, properties) {
       const value = original.apply(this, args)
       const v = value === undefined ? UNDEFINED : value
 
-      if (takesArguments) {
-        this.__cache = setIn(this.__cache, keys, v)
-      } else {
-        this.__cache_no_args[property] = v
+      if (!isFunction(v)) {
+        // Cache the value
+        if (takesArguments) {
+          this.__cache = setIn(this.__cache, keys, v)
+        } else {
+          this.__cache_no_args[property] = v
+        }
       }
 
       return value
     }
   }
+}
+
+const toString = Object.prototype.toString
+
+function isFunction(fn) {
+  const string = toString.call(fn)
+  return (
+    string === '[object Function]' ||
+    (typeof fn === 'function' && string !== '[object RegExp]') ||
+    (typeof window !== 'undefined' &&
+      // IE8 and below
+      (fn === window.setTimeout ||
+        fn === window.alert ||
+        fn === window.confirm ||
+        fn === window.prompt))
+  )
 }
 
 /**

@@ -2047,17 +2047,7 @@ class Node {
    */
 
   validate(schema) {
-    if (this.__validForSchema === schema) {
-      return null
-    }
-
-    const result = schema.validateNode(this)
-
-    if (!result) {
-      this.__validForSchema = schema
-    }
-
-    return result
+    return schema.validateNode(this)
   }
 
   /**
@@ -2147,6 +2137,7 @@ memoize(Node.prototype, [
   'getTextsBetweenPositionsAsArray',
   'isLeafBlock',
   'isLeafInline',
+  'validate',
   'getFirstInvalidDescendant',
 ])
 
