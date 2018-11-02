@@ -10,7 +10,7 @@ import History from './models/history'
 import Inline from './models/inline'
 import Leaf from './models/leaf'
 import Mark from './models/mark'
-import NodeFactory from './models/node-factory'
+import N from './models/node-utils'
 import Operation from './models/operation'
 import Operations from './operations'
 import Range from './models/range'
@@ -40,7 +40,7 @@ export {
   Inline,
   Leaf,
   Mark,
-  NodeFactory,
+  NodeUtils,
   Operation,
   Operations,
   Range,
@@ -64,7 +64,7 @@ export default {
   Inline,
   Leaf,
   Mark,
-  NodeFactory,
+  NodeUtils,
   Operation,
   Operations,
   Range,

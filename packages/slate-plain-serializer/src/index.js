@@ -1,4 +1,4 @@
-import { Block, Mark, NodeFactory, Value } from '@gitbook/slate'
+import { Block, Mark, NodeUtils, Value } from '@gitbook/slate'
 import { Set } from 'immutable'
 
 /**
@@ -19,7 +19,7 @@ function deserialize(string, options = {}) {
     defaultMarks = defaultMarks.toArray()
   }
 
-  defaultBlock = NodeFactory.createProperties(defaultBlock)
+  defaultBlock = NodeUtils.createProperties(defaultBlock)
   defaultMarks = defaultMarks.map(Mark.createProperties)
 
   const json = {

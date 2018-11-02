@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import typeOf from 'type-of'
-import { NodeFactory, Value } from '@gitbook/slate'
+import { NodeUtils, Value } from '@gitbook/slate'
 import { Record } from 'immutable'
 
 /**
@@ -104,7 +104,7 @@ class Html {
       rules = [],
     } = options
 
-    defaultBlock = NodeFactory.createProperties(defaultBlock)
+    defaultBlock = NodeUtils.createProperties(defaultBlock)
 
     this.rules = [...rules, TEXT_RULE]
     this.defaultBlock = defaultBlock

@@ -18,7 +18,7 @@ import type Schema from './schema'
 import generateKey from '../utils/generate-key'
 import memoize from '../utils/memoize'
 import type { Node } from './node'
-import NodeFactory from './node-factory'
+import NodeUtils from './node-utils'
 
 /**
  * Common implementation of Node methods. Extended by Block, Inline and Document
@@ -35,7 +35,7 @@ class NodeCommon implements Node {
       classArg.prototype[method] = classArg.prototype[method]
     })
 
-    classArg.createChildren = NodeFactory.createList
+    classArg.createChildren = NodeUtils.createList
   }
 
   object: ModelObject

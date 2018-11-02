@@ -1,7 +1,7 @@
 import Block from '../models/block'
 import Inline from '../models/inline'
 import Mark from '../models/mark'
-import NodeFactory from '../models/node-factory'
+import NodeUtils from '../models/node-utils'
 import Range from '../models/range'
 
 /**
@@ -486,7 +486,7 @@ Changes.removeTextByKey = (change, key, offset, length, options = {}) => {
  */
 
 Changes.replaceNodeByKey = (change, key, newNode, options = {}) => {
-  newNode = NodeFactory.create(newNode)
+  newNode = NodeUtils.create(newNode)
   const normalize = change.getFlag('normalize', options)
   const { value } = change
   const { document } = value
@@ -556,7 +556,7 @@ Changes.setMarkByKey = (
  */
 
 Changes.setNodeByKey = (change, key, properties, options = {}) => {
-  properties = NodeFactory.createProperties(properties)
+  properties = NodeUtils.createProperties(properties)
   const normalize = change.getFlag('normalize', options)
   const { value } = change
   const { document } = value
@@ -813,7 +813,7 @@ Changes.wrapInlineByKey = (change, key, inline, options) => {
  */
 
 Changes.wrapNodeByKey = (change, key, parent) => {
-  parent = NodeFactory.create(parent)
+  parent = NodeUtils.create(parent)
   parent = parent.set('nodes', parent.nodes.clear())
 
   if (parent.object == 'block') {

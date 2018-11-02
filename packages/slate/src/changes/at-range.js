@@ -3,7 +3,7 @@ import logger from '@gitbook/slate-dev-logger'
 import Block from '../models/block'
 import Inline from '../models/inline'
 import Mark from '../models/mark'
-import NodeFactory from '../models/node-factory'
+import NodeUtils from '../models/node-utils'
 import String from '../utils/string'
 
 /**
@@ -1143,7 +1143,7 @@ Changes.toggleMarkAtRange = (change, range, mark, options = {}) => {
  */
 
 Changes.unwrapBlockAtRange = (change, range, properties, options = {}) => {
-  properties = NodeFactory.createProperties(properties)
+  properties = NodeUtils.createProperties(properties)
 
   const normalize = change.getFlag('normalize', options)
   const { value } = change
@@ -1242,7 +1242,7 @@ Changes.unwrapBlockAtRange = (change, range, properties, options = {}) => {
  */
 
 Changes.unwrapInlineAtRange = (change, range, properties, options = {}) => {
-  properties = NodeFactory.createProperties(properties)
+  properties = NodeUtils.createProperties(properties)
 
   const normalize = change.getFlag('normalize', options)
   const { value } = change

@@ -22,16 +22,16 @@ NodeCommon.mixinNode(Inline)
 /**
  * Utilities to create Nodes
  *
- * @type {NodeFactory}
+ * @type {NodeUtils}
  */
 
-const NodeFactory = {
+class NodeUtils {
   /**
    * Create a new `Node` with `attrs`.
    */
 
-  create(attrs: NodeAttributes = {}): Block | Document | Inline | Text {
-    if (NodeFactory.isNode(attrs)) {
+  static create(attrs: NodeAttributes = {}): Block | Document | Inline | Text {
+    if (NodeUtils.isNode(attrs)) {
       return ((attrs: any): Node)
     }
 
@@ -58,36 +58,36 @@ const NodeFactory = {
           return Text.create(((attrs: any): TextAttributes))
 
         default: {
-          throw new Error('`NodeFactory.create` requires a `object` string.')
+          throw new Error('`NodeUtils.create` requires a `object` string.')
         }
       }
     }
 
     throw new Error(
-      `\`NodeFactory.create\` only accepts objects or nodes but you passed it: ${attrs}`
+      `\`NodeUtils.create\` only accepts objects or nodes but you passed it: ${attrs}`
     )
-  },
+  }
 
   /**
    * Create a list of `Nodes` from an array.
    */
 
-  createList(elements: ListLike<NodeAttributes> = []) {
+  static createList(elements: ListLike<NodeAttributes> = []) {
     if (List.isList(elements) || Array.isArray(elements)) {
-      const list = List(elements.map(NodeFactory.create))
+      const list = List(elements.map(NodeUtils.create))
       return list
     }
 
     throw new Error(
-      `\`NodeFactory.createList\` only accepts lists or arrays, but you passed it: ${elements}`
+      `\`NodeUtils.createList\` only accepts lists or arrays, but you passed it: ${elements}`
     )
-  },
+  }
 
   /**
    * Create a dictionary of settable node properties from `attrs`.
    */
 
-  createProperties(attrs: NodeAttributes = {}) {
+  static createProperties(attrs: NodeAttributes = {}) {
     if (Block.isBlock(attrs) || Inline.isInline(attrs)) {
       return {
         data: attrs.data,
@@ -109,15 +109,15 @@ const NodeFactory = {
     }
 
     throw new Error(
-      `\`NodeFactory.createProperties\` only accepts objects, strings, blocks or inlines, but you passed it: ${attrs}`
+      `\`NodeUtils.createProperties\` only accepts objects, strings, blocks or inlines, but you passed it: ${attrs}`
     )
-  },
+  }
 
   /**
    * Create a `Node` from a JSON `value`.
    */
 
-  fromJSON(value: Object): Node {
+  static fromJSON(value: Object): Node {
     let { object } = value
 
     if (!object && value.kind) {
@@ -141,35 +141,35 @@ const NodeFactory = {
 
       default: {
         throw new Error(
-          `\`NodeFactory.fromJSON\` requires an \`object\` of either 'block', 'document', 'inline' or 'text', but you passed: ${value}`
+          `\`NodeUtils.fromJSON\` requires an \`object\` of either 'block', 'document', 'inline' or 'text', but you passed: ${value}`
         )
       }
     }
-  },
+  }
 
   /**
    * Alias `fromJS`.
    */
 
-  fromJS: NodeFactory.fromJSON,
+  static fromJS = NodeUtils.fromJSON
 
   /**
    * Check if `any` is a `Node`.
    */
 
-  isNode(any: any): boolean {
+  static isNode(any: any): boolean {
     return !!['BLOCK', 'DOCUMENT', 'INLINE', 'TEXT'].find(type =>
       isType(type, any)
     )
-  },
+  }
 
   /**
    * Check if `any` is a list of nodes.
    */
 
-  isNodeList(any: any): boolean {
-    return List.isList(any) && any.every(item => NodeFactory.isNode(item))
-  },
+  static isNodeList(any: any): boolean {
+    return List.isList(any) && any.every(item => NodeUtils.isNode(item))
+  }
 }
 
 /**
@@ -178,4 +178,4 @@ const NodeFactory = {
  * @type {Object}
  */
 
-export default NodeFactory
+export default NodeUtils
