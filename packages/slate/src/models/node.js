@@ -40,9 +40,6 @@ export type NodeAttributes = {
 class Node {
   /**
    * Create a new `Node` with `attrs`.
-   *
-   * @param {Object|Node} attrs
-   * @return {Node}
    */
 
   static create(attrs: NodeAttributes = {}): Node {
@@ -85,9 +82,6 @@ class Node {
 
   /**
    * Create a list of `Nodes` from an array.
-   *
-   * @param {Array<Object|Node>} elements
-   * @return {List<Node>}
    */
 
   static createList(elements: ListLike<NodeAttributes> = []) {
@@ -103,9 +97,6 @@ class Node {
 
   /**
    * Create a dictionary of settable node properties from `attrs`.
-   *
-   * @param {Object|String|Node} attrs
-   * @return {Object}
    */
 
   static createProperties(attrs: NodeAttributes = {}) {
@@ -136,9 +127,6 @@ class Node {
 
   /**
    * Create a `Node` from a JSON `value`.
-   *
-   * @param {Object} value
-   * @return {Node}
    */
 
   static fromJSON(value: Object): Node {
@@ -179,9 +167,6 @@ class Node {
 
   /**
    * Check if `any` is a `Node`.
-   *
-   * @param {Any} any
-   * @return {Boolean}
    */
 
   static isNode(any: any): boolean {
@@ -192,9 +177,6 @@ class Node {
 
   /**
    * Check if `any` is a list of nodes.
-   *
-   * @param {Any} any
-   * @return {Boolean}
    */
 
   static isNodeList(any: any): boolean {
@@ -209,13 +191,9 @@ class Node {
   /**
    * True if the node has both descendants in that order, false otherwise. The
    * order is depth-first, post-order.
-   *
-   * @param {String} first
-   * @param {String} second
-   * @return {Boolean}
    */
 
-  areDescendantsSorted(first: Key, second: Key) {
+  areDescendantsSorted(first: Key, second: Key): boolean {
     first = assertKey(first)
     second = assertKey(second)
 
@@ -229,9 +207,6 @@ class Node {
 
   /**
    * Assert that a node has a child by `key` and return it.
-   *
-   * @param {String} key
-   * @return {Node}
    */
 
   assertChild(key: Key): Node {
@@ -247,9 +222,6 @@ class Node {
 
   /**
    * Assert that a node has a descendant by `key` and return it.
-   *
-   * @param {String} key
-   * @return {Node}
    */
 
   assertDescendant(key: Key): Node {
@@ -265,9 +237,6 @@ class Node {
 
   /**
    * Assert that a node's tree has a node by `key` and return it.
-   *
-   * @param {String} key
-   * @return {Node}
    */
 
   assertNode(key: Key): Node {
@@ -283,9 +252,6 @@ class Node {
 
   /**
    * Assert that a node exists at `path` and return it.
-   *
-   * @param {Array} path
-   * @return {Node}
    */
 
   assertPath(path: Path): Node {
@@ -300,9 +266,6 @@ class Node {
 
   /**
    * Recursively filter all descendant nodes with `iterator`.
-   *
-   * @param {Function} iterator
-   * @return {List<Node>}
    */
 
   filterDescendants(
@@ -319,9 +282,6 @@ class Node {
 
   /**
    * Recursively find all descendant nodes by `iterator`.
-   *
-   * @param {Function} iterator
-   * @return {Node|Null}
    */
 
   findDescendant(iterator: (Node, number, List<Node>) => boolean): ?Node {
@@ -340,8 +300,6 @@ class Node {
   /**
    * Recursively iterate over all descendant nodes with `iterator`. If the
    * iterator returns false it will break the loop.
-   *
-   * @param {Function} iterator
    */
 
   forEachDescendant(iterator: (Node, number, List<Node>) => ?boolean): void {
@@ -364,9 +322,6 @@ class Node {
 
   /**
    * Get the path of ancestors of a descendant node by `key`.
-   *
-   * @param {String|Node} key
-   * @return {List<Node>|Null}
    */
 
   getAncestors(key: Key | Node): ?List<Node> {
@@ -392,8 +347,6 @@ class Node {
 
   /**
    * Get the leaf block descendants of the node.
-   *
-   * @return {List<Node>}
    */
 
   getBlocks(): List<Block> {
@@ -403,8 +356,6 @@ class Node {
 
   /**
    * Get the leaf block descendants of the node.
-   *
-   * @return {List<Node>}
    */
 
   getBlocksAsArray(): Array<Block> {
@@ -418,9 +369,6 @@ class Node {
 
   /**
    * Get the leaf block descendants in a `range`.
-   *
-   * @param {Range} range
-   * @return {List<Node>}
    */
 
   getBlocksAtRange(range: Range): List<Block> {
@@ -431,9 +379,6 @@ class Node {
 
   /**
    * Get the leaf block descendants in a `range` as an array
-   *
-   * @param {Range} range
-   * @return {Array}
    */
 
   getBlocksAtRangeAsArray(range: Range): Array<Block> {
@@ -456,9 +401,6 @@ class Node {
 
   /**
    * Get all of the leaf blocks that match a `type`.
-   *
-   * @param {String} type
-   * @return {List<Node>}
    */
 
   getBlocksByType(type: string): List<Block> {
@@ -468,9 +410,6 @@ class Node {
 
   /**
    * Get all of the leaf blocks that match a `type` as an array
-   *
-   * @param {String} type
-   * @return {Array}
    */
 
   getBlocksByTypeAsArray(type: string): List<Block> {
@@ -488,8 +427,6 @@ class Node {
 
   /**
    * Get all of the characters for every text node.
-   *
-   * @return {List<Character>}
    */
 
   getCharacters(): List<Character> {
@@ -498,9 +435,6 @@ class Node {
 
   /**
    * Get a list of the characters in a `range`.
-   *
-   * @param {Range} range
-   * @return {List<Character>}
    */
 
   getCharactersAtRange(range: Range): List<Character> {
@@ -527,9 +461,6 @@ class Node {
 
   /**
    * Get a child node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getChild(key: Key): ?Node {
@@ -539,10 +470,6 @@ class Node {
 
   /**
    * Get closest parent of node by `key` that matches `iterator`.
-   *
-   * @param {String} key
-   * @param {Function} iterator
-   * @return {Node|Null}
    */
 
   getClosest(key: Key, iterator: (Node, number, List<Node>) => boolean): ?Node {
@@ -559,9 +486,6 @@ class Node {
 
   /**
    * Get the closest block parent of a `node`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getClosestBlock(key: Key): ?Block {
@@ -570,9 +494,6 @@ class Node {
 
   /**
    * Get the closest inline parent of a `node`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getClosestInline(key: Key): ?Inline {
@@ -581,9 +502,6 @@ class Node {
 
   /**
    * Get the closest void parent of a `node`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getClosestVoid(key: Key): ?Node {
@@ -592,10 +510,6 @@ class Node {
 
   /**
    * Get the common ancestor of nodes `one` and `two` by keys.
-   *
-   * @param {String} one
-   * @param {String} two
-   * @return {Node}
    */
 
   getCommonAncestor(one: Key, two: Key): ?Node {
@@ -624,9 +538,6 @@ class Node {
 
   /**
    * Get the decorations for the node from a `stack`.
-   *
-   * @param {Stack} stack
-   * @return {List}
    */
 
   getDecorations(stack: Stack): List<Decoration> {
@@ -637,10 +548,6 @@ class Node {
 
   /**
    * Get the depth of a child node by `key`, with optional `startAt`.
-   *
-   * @param {String} key
-   * @param {Number} startAt (optional)
-   * @return {Number} depth
    */
 
   getDepth(key: Key, startAt?: number = 1): number {
@@ -651,9 +558,6 @@ class Node {
 
   /**
    * Get a descendant node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getDescendant(key: Key): ?Node {
@@ -676,9 +580,6 @@ class Node {
 
   /**
    * Get a descendant by `path`.
-   *
-   * @param {Array} path
-   * @return {Node|Null}
    */
 
   getDescendantAtPath(path: Path): ?Node {
@@ -695,8 +596,6 @@ class Node {
 
   /**
    * Get the first child text node.
-   *
-   * @return {Node|Null}
    */
 
   getFirstText(): ?Text {
@@ -713,9 +612,6 @@ class Node {
 
   /**
    * Get a fragment of the node at a `range`.
-   *
-   * @param {Range} range
-   * @return {Document}
    */
 
   getFragmentAtRange(range: Range): Document {
@@ -782,10 +678,6 @@ class Node {
 
   /**
    * Get the furthest parent of a node by `key` that matches an `iterator`.
-   *
-   * @param {String} key
-   * @param {Function} iterator
-   * @return {Node|Null}
    */
 
   getFurthest(
@@ -805,9 +697,6 @@ class Node {
 
   /**
    * Get the furthest block parent of a node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getFurthestBlock(key: Key): ?Block {
@@ -816,9 +705,6 @@ class Node {
 
   /**
    * Get the furthest inline parent of a node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getFurthestInline(key: Key): ?Inline {
@@ -827,9 +713,6 @@ class Node {
 
   /**
    * Get the furthest ancestor of a node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getFurthestAncestor(key: Key): ?Node {
@@ -843,9 +726,6 @@ class Node {
 
   /**
    * Get the furthest ancestor of a node by `key` that has only one child.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getFurthestOnlyChildAncestor(key: Key): ?Node {
@@ -870,8 +750,6 @@ class Node {
 
   /**
    * Get the closest inline nodes for each text node in the node.
-   *
-   * @return {List<Node>}
    */
 
   getInlines(): List<Inline> {
@@ -881,8 +759,6 @@ class Node {
 
   /**
    * Get the closest inline nodes for each text node in the node, as an array.
-   *
-   * @return {List<Node>}
    */
 
   getInlinesAsArray(): Array<Inline> {
@@ -903,9 +779,6 @@ class Node {
 
   /**
    * Get the closest inline nodes for each text node in a `range`.
-   *
-   * @param {Range} range
-   * @return {List<Node>}
    */
 
   getInlinesAtRange(range: Range): List<Inline> {
@@ -916,9 +789,6 @@ class Node {
 
   /**
    * Get the closest inline nodes for each text node in a `range` as an array.
-   *
-   * @param {Range} range
-   * @return {Array}
    */
 
   getInlinesAtRangeAsArray(range: Range): List<Inline> {
@@ -932,9 +802,6 @@ class Node {
 
   /**
    * Get all of the leaf inline nodes that match a `type`.
-   *
-   * @param {String} type
-   * @return {List<Node>}
    */
 
   getInlinesByType(type: string): List<Inline> {
@@ -944,9 +811,6 @@ class Node {
 
   /**
    * Get all of the leaf inline nodes that match a `type` as an array.
-   *
-   * @param {String} type
-   * @return {Array}
    */
 
   getInlinesByTypeAsArray(type: string): Array<Inline> {
@@ -964,8 +828,6 @@ class Node {
 
   /**
    * Return a set of all keys in the node as an array.
-   *
-   * @return {Array<String>}
    */
 
   getKeysAsArray(): Array<Key> {
@@ -980,8 +842,6 @@ class Node {
 
   /**
    * Return a set of all keys in the node.
-   *
-   * @return {Set<String>}
    */
 
   getKeys(): Set<Key> {
@@ -991,8 +851,6 @@ class Node {
 
   /**
    * Get the last child text node.
-   *
-   * @return {Node|Null}
    */
 
   getLastText(): ?Text {
@@ -1009,8 +867,6 @@ class Node {
 
   /**
    * Get all of the marks for all of the characters of every text node.
-   *
-   * @return {Set<Mark>}
    */
 
   getMarks(): Set<Mark> {
@@ -1020,8 +876,6 @@ class Node {
 
   /**
    * Get all of the marks for all of the characters of every text node.
-   *
-   * @return {OrderedSet<Mark>}
    */
 
   getOrderedMarks(): OrderedSet<Mark> {
@@ -1031,8 +885,6 @@ class Node {
 
   /**
    * Get all of the marks as an array.
-   *
-   * @return {Array}
    */
 
   getMarksAsArray(): Array<Mark> {
@@ -1048,9 +900,6 @@ class Node {
 
   /**
    * Get a set of the marks in a `range`.
-   *
-   * @param {Range} range
-   * @return {Set<Mark>}
    */
 
   getMarksAtRange(range: Range): Set<Mark> {
@@ -1059,9 +908,6 @@ class Node {
 
   /**
    * Get a set of the marks in a `range`.
-   *
-   * @param {Range} range
-   * @return {Set<Mark>}
    */
 
   getInsertMarksAtRange(range: Range): Set<Mark> {
@@ -1080,9 +926,6 @@ class Node {
 
   /**
    * Get a set of the marks in a `range`.
-   *
-   * @param {Range} range
-   * @return {OrderedSet<Mark>}
    */
 
   getOrderedMarksAtRange(range: Range): OrderedSet<Mark> {
@@ -1106,12 +949,6 @@ class Node {
   /**
    * Get a set of the marks in a `range`.
    * PERF: arguments use key and offset for utilizing cache
-   *
-   * @param {string} startKey
-   * @param {number} startOffset
-   * @param {string} endKey
-   * @param {number} endOffset
-   * @returns {OrderedSet<Mark>}
    */
 
   getOrderedMarksBetweenPositions(
@@ -1144,9 +981,6 @@ class Node {
 
   /**
    * Get a set of the active marks in a `range`.
-   *
-   * @param {Range} range
-   * @return {Set<Mark>}
    */
 
   getActiveMarksAtRange(range: Range): Set<Mark> {
@@ -1205,10 +1039,6 @@ class Node {
 
   /**
    * Get a set of marks in a `position`, the equivalent of a collapsed range
-   *
-   * @param {string} key
-   * @param {number} offset
-   * @return {Set}
    */
 
   getMarksAtPosition(key: Key, offset: number): Set<Mark> {
@@ -1234,9 +1064,6 @@ class Node {
 
   /**
    * Get all of the marks that match a `type`.
-   *
-   * @param {String} type
-   * @return {Set<Mark>}
    */
 
   getMarksByType(type: string): Set<Mark> {
@@ -1246,9 +1073,6 @@ class Node {
 
   /**
    * Get all of the marks that match a `type`.
-   *
-   * @param {String} type
-   * @return {OrderedSet<Mark>}
    */
 
   getOrderedMarksByType(type: string): OrderedSet<Mark> {
@@ -1258,9 +1082,6 @@ class Node {
 
   /**
    * Get all of the marks that match a `type` as an array.
-   *
-   * @param {String} type
-   * @return {Array}
    */
 
   getMarksByTypeAsArray(type: string): Array<Mark> {
@@ -1273,9 +1094,6 @@ class Node {
 
   /**
    * Get the block node before a descendant text node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getNextBlock(key: Key): ?Block {
@@ -1297,9 +1115,6 @@ class Node {
 
   /**
    * Get the node after a descendant by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getNextSibling(key: Key): ?Node {
@@ -1316,9 +1131,6 @@ class Node {
 
   /**
    * Get the text node after a descendant text node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getNextText(key: Key): ?Text {
@@ -1330,9 +1142,6 @@ class Node {
 
   /**
    * Get a node in the tree by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getNode(key: Key): ?Node {
@@ -1342,9 +1151,6 @@ class Node {
 
   /**
    * Get a node in the tree by `path`.
-   *
-   * @param {Array} path
-   * @return {Node|Null}
    */
 
   getNodeAtPath(path: Path): ?Node {
@@ -1353,9 +1159,6 @@ class Node {
 
   /**
    * Get the offset for a descendant text node by `key`.
-   *
-   * @param {String} key
-   * @return {Number}
    */
 
   getOffset(key: Key): number {
@@ -1373,9 +1176,6 @@ class Node {
 
   /**
    * Get the offset from a `range`.
-   *
-   * @param {Range} range
-   * @return {Number}
    */
 
   getOffsetAtRange(range: Range): number {
@@ -1395,9 +1195,6 @@ class Node {
 
   /**
    * Get the parent of a child node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getParent(key: Key): ?Node {
@@ -1419,9 +1216,6 @@ class Node {
 
   /**
    * Get the path of a descendant node by `key`.
-   *
-   * @param {String|Node} key
-   * @return {Array}
    */
 
   getPath(key: Key): Path {
@@ -1445,10 +1239,6 @@ class Node {
 
   /**
    * Refind the path of node if path is changed.
-   *
-   * @param {Array} path
-   * @param {String} key
-   * @return {Array}
    */
 
   refindPath(path: Path, key: Key): Path {
@@ -1464,10 +1254,6 @@ class Node {
   /**
    *
    * Refind the node with the same node.key after change.
-   *
-   * @param {Array} path
-   * @param {String} key
-   * @return {Node|Void}
    */
 
   refindNode(path: Path, key: Key): ?Node {
@@ -1482,9 +1268,6 @@ class Node {
 
   /**
    * Get the placeholder for the node from a `schema`.
-   *
-   * @param {Schema} schema
-   * @return {Component|Void}
    */
 
   getPlaceholder(schema: Schema): ?Component<any> {
@@ -1493,9 +1276,6 @@ class Node {
 
   /**
    * Get the block node before a descendant text node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getPreviousBlock(key: Key): ?Block {
@@ -1517,9 +1297,6 @@ class Node {
 
   /**
    * Get the node before a descendant node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getPreviousSibling(key: Key): ?Node {
@@ -1536,9 +1313,6 @@ class Node {
 
   /**
    * Get the text node before a descendant text node by `key`.
-   *
-   * @param {String} key
-   * @return {Node|Null}
    */
 
   getPreviousText(key: Key): ?Text {
@@ -1552,10 +1326,6 @@ class Node {
    * Get the indexes of the selection for a `range`, given an extra flag for
    * whether the node `isSelected`, to determine whether not finding matches
    * means everything is selected or nothing is.
-   *
-   * @param {Range} range
-   * @param {Boolean} isSelected
-   * @return {Object|Null}
    */
 
   getSelectionIndexes(
@@ -1606,8 +1376,6 @@ class Node {
 
   /**
    * Get the concatenated text string of all child nodes.
-   *
-   * @return {String}
    */
 
   getText(): string {
@@ -1618,9 +1386,6 @@ class Node {
 
   /**
    * Get the descendent text node at an `offset`.
-   *
-   * @param {Number} offset
-   * @return {Node|Null}
    */
 
   getTextAtOffset(offset: number): ?Text {
@@ -1639,8 +1404,6 @@ class Node {
 
   /**
    * Get the direction of the node's text.
-   *
-   * @return {String}
    */
 
   getTextDirection(): 'rtl' | 'ltr' | void {
@@ -1650,8 +1413,6 @@ class Node {
 
   /**
    * Recursively get all of the child text nodes in order of appearance.
-   *
-   * @return {List<Node>}
    */
 
   getTexts(): List<Node> {
@@ -1661,8 +1422,6 @@ class Node {
 
   /**
    * Recursively get all the leaf text nodes in order of appearance, as array.
-   *
-   * @return {List<Node>}
    */
 
   getTextsAsArray(): Array<Text> {
@@ -1681,9 +1440,6 @@ class Node {
 
   /**
    * Get all of the text nodes in a `range`.
-   *
-   * @param {Range} range
-   * @return {List<Node>}
    */
 
   getTextsAtRange(range: Range): List<Text> {
@@ -1696,10 +1452,6 @@ class Node {
   /**
    * Get all of the text nodes in a `range` as an array.
    * PERF: use key in arguments for cache
-   *
-   * @param {string} startKey
-   * @param {string} endKey
-   * @returns {Array}
    */
 
   getTextsBetweenPositionsAsArray(startKey: Key, endKey: Key): Array<Text> {
@@ -1718,9 +1470,6 @@ class Node {
 
   /**
    * Get all of the text nodes in a `range` as an array.
-   *
-   * @param {Range} range
-   * @return {Array}
    */
 
   getTextsAtRangeAsArray(range: Range): Array<Text> {
@@ -1732,9 +1481,6 @@ class Node {
 
   /**
    * Check if a child node exists by `key`.
-   *
-   * @param {String} key
-   * @return {Boolean}
    */
 
   hasChild(key: Key): boolean {
@@ -1743,9 +1489,6 @@ class Node {
 
   /**
    * Check if a node has block node children.
-   *
-   * @param {String} key
-   * @return {Boolean}
    */
 
   hasBlocks(key: Key): boolean {
@@ -1755,9 +1498,6 @@ class Node {
 
   /**
    * Check if a node has inline node children.
-   *
-   * @param {String} key
-   * @return {Boolean}
    */
 
   hasInlines(key: Key): boolean {
@@ -1769,9 +1509,6 @@ class Node {
 
   /**
    * Recursively check if a child node exists by `key`.
-   *
-   * @param {String} key
-   * @return {Boolean}
    */
 
   hasDescendant(key: Key): boolean {
@@ -1780,9 +1517,6 @@ class Node {
 
   /**
    * Recursively check if a node exists by `key`.
-   *
-   * @param {String} key
-   * @return {Boolean}
    */
 
   hasNode(key: Key): boolean {
@@ -1791,9 +1525,6 @@ class Node {
 
   /**
    * Check if a node has a void parent by `key`.
-   *
-   * @param {String} key
-   * @return {Boolean}
    */
 
   hasVoidParent(key: Key): boolean {
@@ -1802,10 +1533,6 @@ class Node {
 
   /**
    * Insert a `node` at `index`.
-   *
-   * @param {Number} index
-   * @param {Node} node
-   * @return {Node}
    */
 
   insertNode(index: number, node: Node): Node {
@@ -1827,9 +1554,6 @@ class Node {
 
   /**
    * Check whether the node is in a `range`.
-   *
-   * @param {Range} range
-   * @return {Boolean}
    */
 
   isInRange(range: Range): boolean {
@@ -1870,8 +1594,6 @@ class Node {
 
   /**
    * Check whether the node is a leaf block.
-   *
-   * @return {Boolean}
    */
 
   isLeafBlock(): boolean {
@@ -1880,8 +1602,6 @@ class Node {
 
   /**
    * Check whether the node is a leaf inline.
-   *
-   * @return {Boolean}
    */
 
   isLeafInline(): boolean {
@@ -1894,10 +1614,6 @@ class Node {
    * Merge a children node `first` with another children node `second`.
    * `first` and `second` will be concatenated in that order.
    * `first` and `second` must be two Nodes or two Text.
-   *
-   * @param {Node} first
-   * @param {Node} second
-   * @return {Node}
    */
 
   mergeNode(withIndex: number, index: number) {
@@ -1931,9 +1647,6 @@ class Node {
   /**
    * Map all child nodes, updating them in their parents. This method is
    * optimized to not return a new node if no changes are made.
-   *
-   * @param {Function} iterator
-   * @return {Node}
    */
 
   mapChildren(iterator: (Node, number, List<Node>) => Node): Node {
@@ -1950,9 +1663,6 @@ class Node {
   /**
    * Map all descendant nodes, updating them in their parents. This method is
    * optimized to not return a new node if no changes are made.
-   *
-   * @param {Function} iterator
-   * @return {Node}
    */
 
   mapDescendants(iterator: (Node, number, List<Node>) => Node): Node {
@@ -1972,8 +1682,6 @@ class Node {
 
   /**
    * Regenerate the node's key.
-   *
-   * @return {Node}
    */
 
   regenerateKey(): Node {
@@ -1983,9 +1691,6 @@ class Node {
 
   /**
    * Remove a `node` from the children node map.
-   *
-   * @param {String} key
-   * @return {Node}
    */
 
   removeDescendant(key: Key): Node {
@@ -2006,9 +1711,6 @@ class Node {
 
   /**
    * Remove a node at `index`.
-   *
-   * @param {Number} index
-   * @return {Node}
    */
 
   removeNode(index: number): Node {
@@ -2018,10 +1720,6 @@ class Node {
 
   /**
    * Split a child node by `index` at `position`.
-   *
-   * @param {Number} index
-   * @param {Number} position
-   * @return {Node}
    */
 
   splitNode(index: number, position: number): Node {
@@ -2052,9 +1750,6 @@ class Node {
 
   /**
    * Set a new value for a child node by `key`.
-   *
-   * @param {Node} node
-   * @return {Node}
    */
 
   updateNode(node: Node): Node {
@@ -2079,9 +1774,6 @@ class Node {
 
   /**
    * Validate the node against a `schema`.
-   *
-   * @param {Schema} schema
-   * @return {Function|Null}
    */
 
   validate(schema: Schema): * {
@@ -2090,9 +1782,6 @@ class Node {
 
   /**
    * Get the first invalid descendant
-   *
-   * @param {Schema} schema
-   * @return {Node|Text|Null}
    */
 
   getFirstInvalidDescendant(schema: Schema): ?Node {
@@ -2108,9 +1797,6 @@ class Node {
 
 /**
  * Assert a key `arg`.
- *
- * @param {String} arg
- * @return {String}
  */
 
 function assertKey(arg: any): Key {
