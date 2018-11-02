@@ -11,6 +11,9 @@ import Data from './data'
 import Block, { type BlockAttributes } from './block'
 import Inline, { type InlineAttributes } from './inline'
 import Document, { type DocumentAttributes } from './document'
+import type Character from './character'
+import type Mark from './mark'
+import type Stack from './stack'
 import { isType } from '../constants/model-types'
 import Range from './range'
 import Text, { type TextAttributes } from './text'
@@ -177,6 +180,9 @@ class NodeCommon implements Node {
   type: string
   key: Key
   nodes: List<Node>
+  isVoid: boolean
+  text: string
+  data: Data
 
   /**
    * True if the node has both descendants in that order, false otherwise. The
@@ -402,7 +408,7 @@ class NodeCommon implements Node {
    * Get all of the leaf blocks that match a `type` as an array
    */
 
-  getBlocksByTypeAsArray(type: string): List<Block> {
+  getBlocksByTypeAsArray(type: string): Array<Block> {
     return this.nodes.reduce((array, node) => {
       if (node.object != 'block') {
         return array

@@ -35,6 +35,9 @@ export interface Node {
   type: string;
   key: Key;
   nodes: List<Node>;
+  isVoid: boolean;
+  text: string;
+  data: Data;
 
   /**
    * True if the node has both descendants in that order, false otherwise. The
@@ -128,7 +131,7 @@ export interface Node {
    * Get all of the leaf blocks that match a `type` as an array
    */
 
-  getBlocksByTypeAsArray(type: string): List<Block>;
+  getBlocksByTypeAsArray(type: string): Array<Block>;
 
   /**
    * Get all of the characters for every text node.
