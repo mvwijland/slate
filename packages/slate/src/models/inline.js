@@ -1,3 +1,5 @@
+/** @flow */
+
 /**
  * Dependencies.
  */
@@ -8,6 +10,12 @@ import { List, Map, Record } from 'immutable'
 
 import MODEL_TYPES, { isType } from '../constants/model-types'
 import generateKey from '../utils/generate-key'
+import type { ListLike, ModelObject } from './types'
+import type { Node, NodeAttributes } from './node'
+
+export type InlineAttributes = NodeAttributes
+
+type CreateInlineParams = InlineAttributes | Inline | string
 
 /**
  * Default properties.
@@ -29,7 +37,7 @@ const DEFAULTS = {
  * @type {Inline}
  */
 
-class Inline extends Record(DEFAULTS) {
+class Inline extends Record(DEFAULTS) implements Node {
   /**
    * Create a new `Inline` with `attrs`.
    *
@@ -37,7 +45,7 @@ class Inline extends Record(DEFAULTS) {
    * @return {Inline}
    */
 
-  static create(attrs = {}) {
+  static create(attrs: CreateInlineParams = {}): Inline {
     if (Inline.isInline(attrs)) {
       return attrs
     }
@@ -62,7 +70,7 @@ class Inline extends Record(DEFAULTS) {
    * @return {List<Inline>}
    */
 
-  static createList(elements = []) {
+  static createList(elements: ListLike<CreateInlineParams> = []): List<Inline> {
     if (List.isList(elements) || Array.isArray(elements)) {
       const list = new List(elements.map(Inline.create))
       return list
@@ -80,7 +88,7 @@ class Inline extends Record(DEFAULTS) {
    * @return {Inline}
    */
 
-  static fromJSON(object) {
+  static fromJSON(object: Object): Inline {
     if (Inline.isInline(object)) {
       return object
     }
@@ -130,7 +138,7 @@ class Inline extends Record(DEFAULTS) {
    * @return {Boolean}
    */
 
-  static isInlineList(any) {
+  static isInlineList(any: any): boolean {
     return List.isList(any) && any.every(item => Inline.isInline(item))
   }
 
@@ -140,11 +148,11 @@ class Inline extends Record(DEFAULTS) {
    * @return {String}
    */
 
-  get object() {
+  get object(): ModelObject {
     return 'inline'
   }
 
-  get kind() {
+  get kind(): ModelObject {
     logger.deprecate(
       'slate@0.32.0',
       'The `kind` property of Slate objects has been renamed to `object`.'

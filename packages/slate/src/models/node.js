@@ -31,13 +31,13 @@ export type NodeAttributes = {
  */
 
 export interface Node {
-  object: ModelObject;
-  type: string;
-  key: Key;
-  nodes: List<Node>;
-  isVoid: boolean;
-  text: string;
-  data: Data;
+  +object: ModelObject;
+  +type: string;
+  +key: Key;
+  +nodes: List<Node>;
+  +isVoid: boolean;
+  +text: string;
+  +data: Data;
 
   /**
    * True if the node has both descendants in that order, false otherwise. The
