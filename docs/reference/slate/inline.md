@@ -80,9 +80,9 @@ Create an inline from a plain Javascript object of `properties`.
 
 Create a list of inline nodes from a plain Javascript `array`.
 
-### `Inline.fromJSON`
+### `Inline.fromJS`
 
-`Inline.fromJSON(object: Object) => Inline`
+`Inline.fromJS(object: Object) => Inline`
 
 Create an inline from a JSON `object`.
 
@@ -98,8 +98,8 @@ Inlines implement the [`Node`](./node.md) interface. For information about all o
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the inline.

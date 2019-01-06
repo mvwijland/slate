@@ -22,7 +22,7 @@ Check out http://slatejs.org for examples!
 
 Deserialize a plain text `string` into a [`Value`](../slate/value.md). A series of blocks will be created by splitting the input string on `\n` characters. Each block is given a type of `'line'`.
 
-If you pass `toJSON: true` as an option, the return value will be a JSON object instead of a [`Value`](../slate/value.md) object.
+If you pass `toJS: true` as an option, the return value will be a JSON object instead of a [`Value`](../slate/value.md) object.
 
 ### `Plain.serialize`
 

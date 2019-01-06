@@ -14,7 +14,7 @@ Let's start with a basic editor:
 import { Editor } from '@gitbook/slate-react'
 import { Value } from '@gitbook/slate'
 
-const initialValue = Value.fromJSON({
+const initialValue = Value.fromJS({
   document: {
     nodes: [
       {
@@ -57,7 +57,7 @@ What we need to do is save the changes you make somewhere. For this example, we'
 So, in our `onChange` handler, we need to save the `value`. But the `value` argument that `onChange` receives is an immutable object, so we can't just save it as-is. We need to serialize it to a format we understand first, like JSON!
 
 ```js
-const initialValue = Value.fromJSON({
+const initialValue = Value.fromJS({
   document: {
     nodes: [
       {
@@ -85,7 +85,7 @@ class App extends React.Component {
 
   onChange = ({ value }) => {
     // Save the value to Local Storage.
-    const content = JSON.stringify(value.toJSON())
+    const content = JSON.stringify(value.toJS())
     localStorage.setItem('content', content)
 
     this.setState({ value })
@@ -104,7 +104,7 @@ But... if you refresh the page, everything is still reset. That's because we nee
 ```js
 // Update the initial content to be pulled from Local Storage if it exists.
 const existingValue = JSON.parse(localStorage.getItem('content'))
-const initialValue = Value.fromJSON(
+const initialValue = Value.fromJS(
   existingValue || {
     document: {
       nodes: [
@@ -133,7 +133,7 @@ class App extends React.Component {
   }
 
   onChange = ({ value }) => {
-    const content = JSON.stringify(value.toJSON())
+    const content = JSON.stringify(value.toJS())
     localStorage.setItem('content', content)
 
     this.setState({ value })
@@ -151,7 +151,7 @@ However, if you inspect the change handler, you'll notice that it's actually sav
 
 ```js
 const existingValue = JSON.parse(localStorage.getItem('content'))
-const initialValue = Value.fromJSON(
+const initialValue = Value.fromJS(
   existingValue || {
     document: {
       nodes: [
@@ -182,7 +182,7 @@ class App extends React.Component {
   onChange = ({ value }) => {
     // Check to see if the document has changed before saving.
     if (value.document != this.state.value.document) {
-      const content = JSON.stringify(value.toJSON())
+      const content = JSON.stringify(value.toJS())
       localStorage.setItem('content', content)
     }
 

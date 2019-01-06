@@ -140,17 +140,17 @@ class Node {
 
     switch (object) {
       case 'block':
-        return Block.fromJSON(value)
+        return Block.fromJS(value)
       case 'document':
-        return Document.fromJSON(value)
+        return Document.fromJS(value)
       case 'inline':
-        return Inline.fromJSON(value)
+        return Inline.fromJS(value)
       case 'text':
-        return Text.fromJSON(value)
+        return Text.fromJS(value)
 
       default: {
         throw new Error(
-          `\`Node.fromJSON\` requires an \`object\` of either 'block', 'document', 'inline' or 'text', but you passed: ${value}`
+          `\`Node.fromJS\` requires an \`object\` of either 'block', 'document', 'inline' or 'text', but you passed: ${value}`
         )
       }
     }

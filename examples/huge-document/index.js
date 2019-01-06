@@ -48,7 +48,7 @@ class HugeDocument extends React.Component {
    * @type {Object}
    */
 
-  state = { value: Value.fromJSON(json, { normalize: false }) }
+  state = { value: Value.fromJS(json, { normalize: false }) }
 
   /**
    * Render the editor.

@@ -34,8 +34,8 @@ describe('plugins', () => {
             const simulator = new Simulator({ plugins, value: input })
             fn(simulator)
 
-            const actual = simulator.value.toJSON({ preserveSelection: true })
-            const expected = output.toJSON({ preserveSelection: true })
+            const actual = simulator.value.toJS({ preserveSelection: true })
+            const expected = output.toJS({ preserveSelection: true })
             assert.deepEqual(actual, expected)
           })
         }

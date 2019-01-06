@@ -185,7 +185,7 @@ class Html {
       },
     }
 
-    const ret = toJSON ? json : Value.fromJSON(json)
+    const ret = toJSON ? json : Value.fromJS(json)
     return ret
   }
 

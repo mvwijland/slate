@@ -218,9 +218,9 @@ Will validate a node's text.
 
 Create a new `Schema` instance with `properties`.
 
-### `Schema.fromJSON`
+### `Schema.fromJS`
 
-`Schema.fromJSON(object: Object) => Schema`
+`Schema.fromJS(object: Object) => Schema`
 
 Create a schema from a JSON `object`.
 
@@ -232,9 +232,9 @@ Returns a boolean if the passed in argument is a `Schema`.
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the schema.
 

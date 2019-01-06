@@ -214,7 +214,7 @@ const CREATORS = {
       selection = selection.merge(props).normalize(document)
     }
 
-    let value = Value.fromJSON({ data, document, selection }, { normalize })
+    let value = Value.fromJS({ data, document, selection }, { normalize })
 
     // apply any decorations built
     if (decorations.length > 0) {

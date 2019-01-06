@@ -25,7 +25,7 @@ Changes.select = (change, properties, options = {}) => {
   const { value } = change
   const { document, selection } = value
   const props = {}
-  const sel = selection.toJSON()
+  const sel = selection.toJS()
   const next = selection.merge(properties).normalize(document)
   properties = pick(next, Object.keys(properties))
 

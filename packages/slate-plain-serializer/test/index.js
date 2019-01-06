@@ -33,8 +33,8 @@ describe('slate-plain-serializer', () => {
         const module = require(resolve(dir, test))
         const { input, output, options } = module
         const value = Plain.deserialize(input, options)
-        const actual = Value.isValue(value) ? value.toJSON() : value
-        const expected = Value.isValue(output) ? output.toJSON() : output
+        const actual = Value.isValue(value) ? value.toJS() : value
+        const expected = Value.isValue(output) ? output.toJS() : output
         assert.deepEqual(actual, expected)
       })
     }

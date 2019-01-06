@@ -36,7 +36,7 @@ function decode(string) {
 
 function deserialize(string, options) {
   const raw = decode(string)
-  const value = Value.fromJSON(raw, options)
+  const value = Value.fromJS(raw, options)
   return value
 }
 
@@ -49,7 +49,7 @@ function deserialize(string, options) {
 
 function deserializeNode(string, options) {
   const raw = decode(string)
-  const node = Node.fromJSON(raw, options)
+  const node = Node.fromJS(raw, options)
   return node
 }
 
@@ -61,7 +61,7 @@ function deserializeNode(string, options) {
  */
 
 function serialize(value, options) {
-  const raw = value.toJSON(options)
+  const raw = value.toJS(options)
   const encoded = encode(raw)
   return encoded
 }
@@ -74,7 +74,7 @@ function serialize(value, options) {
  */
 
 function serializeNode(node, options) {
-  const raw = node.toJSON(options)
+  const raw = node.toJS(options)
   const encoded = encode(raw)
   return encoded
 }

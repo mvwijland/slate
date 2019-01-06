@@ -47,9 +47,9 @@ Create a mark from a plain Javascript object of `properties`.
 
 Create a set of marks from a plain Javascript `array`.
 
-### `Mark.fromJSON`
+### `Mark.fromJS`
 
-`Mark.fromJSON(object: Object) => Mark`
+`Mark.fromJS(object: Object) => Mark`
 
 Create a mark from a JSON `object`.
 
@@ -61,8 +61,8 @@ Returns a boolean if the passed in argument is a `Mark`.
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the mark.

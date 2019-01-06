@@ -49,9 +49,9 @@ Create a character from a plain Javascript object of `properties`.
 
 Create a list of characters from a plain Javascript `array`.
 
-### `Character.fromJSON`
+### `Character.fromJS`
 
-`Character.fromJSON(object: Object) => Character`
+`Character.fromJS(object: Object) => Character`
 
 Create a character from a JSON `object`.
 
@@ -63,8 +63,8 @@ Returns a boolean if the passed in argument is a `Character`.
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the character.

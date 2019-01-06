@@ -16,8 +16,8 @@ A data object can have any properties associated with it.
 
 Create a data object from a plain Javascript object of `properties`.
 
-### `Data.fromJSON`
+### `Data.fromJS`
 
-`Data.fromJSON(object: Object) => Data`
+`Data.fromJS(object: Object) => Data`
 
 Create a data object from a JSON `object`.

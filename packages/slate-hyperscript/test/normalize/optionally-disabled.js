@@ -12,7 +12,7 @@ export const input = (
   </value>
 )
 
-export const output = Value.fromJSON(
+export const output = Value.fromJS(
   {
     document: Document.create({
       nodes: [

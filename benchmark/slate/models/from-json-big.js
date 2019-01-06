@@ -3,7 +3,7 @@
 const { Value } = require('@gitbook/slate')
 
 module.exports.default = function(json) {
-  Value.fromJSON(json)
+  Value.fromJS(json)
 }
 
 const input = {

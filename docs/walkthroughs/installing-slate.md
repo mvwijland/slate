@@ -31,7 +31,7 @@ import { Editor } from '@gitbook/slate-react'
 import { Value } from '@gitbook/slate'
 
 // Create our initial value...
-const initialValue = Value.fromJSON({
+const initialValue = Value.fromJS({
   document: {
     nodes: [
       {
@@ -61,7 +61,7 @@ import React from 'react'
 import { Editor } from '@gitbook/slate-react'
 import { Value } from '@gitbook/slate'
 
-const initialValue = Value.fromJSON({
+const initialValue = Value.fromJS({
   document: {
     nodes: [
       {

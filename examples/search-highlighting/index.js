@@ -42,7 +42,7 @@ class SearchHighlighting extends React.Component {
    */
 
   state = {
-    value: Value.fromJSON(initialValue),
+    value: Value.fromJS(initialValue),
   }
 
   /**

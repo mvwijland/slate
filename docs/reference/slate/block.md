@@ -80,9 +80,9 @@ Create a block from a plain Javascript object of `properties`.
 
 Create a list of block nodes from a plain Javascript `array`.
 
-### `Block.fromJSON`
+### `Block.fromJS`
 
-`Block.fromJSON(object: Object) => Block`
+`Block.fromJS(object: Object) => Block`
 
 Create a block from a JSON `object`.
 
@@ -98,8 +98,8 @@ Blocks implement the [`Node`](./node.md) interface. For information about all of
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the block.

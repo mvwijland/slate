@@ -35,8 +35,8 @@ describe('slate-html-serializer', () => {
         const { input, output, config, options } = module
         const html = new Html({ parseHtml: JSDOM.fragment, ...config })
         const value = html.deserialize(input, options)
-        const actual = Value.isValue(value) ? value.toJSON() : value
-        const expected = Value.isValue(output) ? output.toJSON() : output
+        const actual = Value.isValue(value) ? value.toJS() : value
+        const expected = Value.isValue(output) ? output.toJS() : output
         assert.deepEqual(actual, expected)
       })
     }

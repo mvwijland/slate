@@ -52,9 +52,9 @@ A concatenated string of all of the descendant [`Text`](./text.md) nodes of this
 
 Create a document from a plain Javascript object of `properties`.
 
-### `Document.fromJSON`
+### `Document.fromJS`
 
-`Document.fromJSON(object: Object) => Document`
+`Document.fromJS(object: Object) => Document`
 
 Create a document from a JSON `object`.
 
@@ -70,8 +70,8 @@ Documents implement the [`Node`](./node.md) interface. For information about all
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the document.

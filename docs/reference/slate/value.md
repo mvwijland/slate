@@ -201,9 +201,9 @@ Whether the current selection is empty.
 
 Create a new `Value` instance with `properties`.
 
-### `Value.fromJSON`
+### `Value.fromJS`
 
-`Value.fromJSON(object: Object) => Value`
+`Value.fromJS(object: Object) => Value`
 
 Create a value from a JSON `object`.
 
@@ -221,8 +221,8 @@ Returns a boolean if the passed in argument is a `Value`.
 
 Create a new [`Change`](./change.md) that acts on the current value.
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the value.

@@ -102,7 +102,21 @@ function orderChildDecorations(node, decorations) {
     })
   })
 
-  return endPoints.sort((a, b) => (a.order > b.order ? 1 : -1))
+  return endPoints.sort(byOrder)
+}
+
+/*
+ * Compare two objects to sort them according to their .order property
+ */
+
+function byOrder(a, b) {
+  if (a.order > b.order) {
+    return 1
+  } else if (a.order < b.order) {
+    return -1
+  } else {
+    return 0
+  }
 }
 
 /*

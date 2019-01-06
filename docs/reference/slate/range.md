@@ -111,9 +111,9 @@ A few convenience properties for accessing the first and last point of the range
 
 Create a new `Range` instance with `properties`.
 
-### `Range.fromJSON`
+### `Range.fromJS`
 
-`Range.fromJSON(object: Object) => Range`
+`Range.fromJS(object: Object) => Range`
 
 Create a range from a JSON `object`.
 
@@ -125,9 +125,9 @@ Returns a boolean if the passed in argument is a `Range`.
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the range.
 

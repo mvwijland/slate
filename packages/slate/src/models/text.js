@@ -261,7 +261,7 @@ class Text extends Record(DEFAULTS) {
       if (!first) {
         return this.set(
           'leaves',
-          List.of(Leaf.fromJSON({ text: '', marks: set }))
+          List.of(Leaf.fromJS({ text: '', marks: set }))
         )
       }
 

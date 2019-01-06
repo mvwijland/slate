@@ -47,9 +47,9 @@ A concatenated string of all of the characters in the text node.
 
 Create a text from a plain Javascript object of `properties`.
 
-### `Text.fromJSON`
+### `Text.fromJS`
 
-`Text.fromJSON(object: Object) => Text`
+`Text.fromJS(object: Object) => Text`
 
 Create a text from a JSON `object`.
 
@@ -61,8 +61,8 @@ Returns a boolean if the passed in argument is a `Text`.
 
 ## Instance Methods
 
-### `toJSON`
+### `toJS`
 
-`toJSON() => Object`
+`toJS() => Object`
 
 Returns a JSON representation of the text.

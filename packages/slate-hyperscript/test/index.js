@@ -24,8 +24,8 @@ describe('slate-hyperscript', () => {
         const module = require(resolve(dir, test))
         const { input, output } = module
 
-        const actual = input.toJSON()
-        const expected = Value.isValue(output) ? output.toJSON() : output
+        const actual = input.toJS()
+        const expected = Value.isValue(output) ? output.toJS() : output
         assert.deepEqual(actual, expected)
         if (module.test) module.test()
       })
@@ -44,8 +44,8 @@ describe('slate-hyperscript', () => {
         const module = require(resolve(dir, test))
         const { input, output } = module
 
-        const actual = input.toJSON()
-        const expected = Value.isValue(output) ? output.toJSON() : output
+        const actual = input.toJS()
+        const expected = Value.isValue(output) ? output.toJS() : output
         assert.deepEqual(actual, expected)
       })
     }
@@ -64,8 +64,8 @@ describe('slate-hyperscript', () => {
         const { input, output, expectSelection } = module
 
         // ensure deserialization was okay
-        const actual = input.toJSON()
-        const expected = Value.isValue(output) ? output.toJSON() : output
+        const actual = input.toJS()
+        const expected = Value.isValue(output) ? output.toJS() : output
         assert.deepEqual(actual, expected)
 
         // ensure expected properties of selection match
@@ -89,8 +89,8 @@ describe('slate-hyperscript', () => {
         const { input, output, expectDecorations } = module
 
         // ensure deserialization was okay
-        const actual = input.toJSON()
-        const expected = Value.isValue(output) ? output.toJSON() : output
+        const actual = input.toJS()
+        const expected = Value.isValue(output) ? output.toJS() : output
         assert.deepEqual(actual, expected)
 
         const actualDecorations = input.decorations.toArray().map(m => m.toJS())
@@ -122,8 +122,8 @@ describe('slate-hyperscript', () => {
         const module = require(resolve(dir, test))
         const { input, output } = module
 
-        const actual = Value.isValue(input) ? input.toJSON() : input
-        const expected = Value.isValue(output) ? output.toJSON() : output
+        const actual = Value.isValue(input) ? input.toJS() : input
+        const expected = Value.isValue(output) ? output.toJS() : output
         assert.deepEqual(actual, expected)
       })
     }

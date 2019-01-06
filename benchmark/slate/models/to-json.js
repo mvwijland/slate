@@ -4,7 +4,7 @@
 const h = require('../../helpers/h')
 
 module.exports.default = function(value) {
-  value.toJSON()
+  value.toJS()
 }
 
 const value = (
