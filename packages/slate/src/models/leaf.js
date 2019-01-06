@@ -199,7 +199,10 @@ class Leaf extends Record(DEFAULTS) {
    */
 
   static fromJSON(object) {
-    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    logger.deprecate(
+      'slate@0.35.0',
+      'fromJSON methods are deprecated, use fromJS instead'
+    )
     return Leaf.fromJS(object)
   }
 
@@ -329,7 +332,10 @@ class Leaf extends Record(DEFAULTS) {
    */
 
   toJSON() {
-    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    logger.deprecate(
+      'slate@0.35.0',
+      'toJSON methods are deprecated, use toJS instead'
+    )
     return this.toJS()
   }
 }

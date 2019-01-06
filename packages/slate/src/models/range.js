@@ -1,6 +1,6 @@
 import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
-import { List, Record, Set } from 'immutable'
+import { List, Record } from 'immutable'
 
 import MODEL_TYPES from '../constants/model-types'
 import Mark from './mark'
@@ -148,7 +148,10 @@ class Range extends Record(DEFAULTS) {
    */
 
   static fromJSON(object) {
-    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    logger.deprecate(
+      'slate@0.35.0',
+      'fromJSON methods are deprecated, use fromJS instead'
+    )
     return Range.fromJS(object)
   }
 
@@ -802,7 +805,10 @@ class Range extends Record(DEFAULTS) {
    */
 
   toJSON() {
-    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    logger.deprecate(
+      'slate@0.35.0',
+      'toJSON methods are deprecated, use toJS instead'
+    )
     return this.toJS()
   }
 }
