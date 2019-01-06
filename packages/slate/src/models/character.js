@@ -39,7 +39,7 @@ class Character extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Character.fromJSON(attrs)
+      return Character.fromJS(attrs)
     }
 
     throw new Error(
@@ -76,11 +76,11 @@ class Character extends Record(DEFAULTS) {
    * @return {Character}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     const { text, marks = [] } = object
 
     if (typeof text != 'string') {
-      throw new Error('`Character.fromJSON` requires a block `text` string.')
+      throw new Error('`Character.fromJS` requires a block `text` string.')
     }
 
     const character = new Character({
@@ -95,7 +95,10 @@ class Character extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Character.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Character.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Character`.
@@ -141,22 +144,23 @@ class Character extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON() {
+  toJS() {
     const object = {
       object: this.object,
       text: this.text,
-      marks: this.marks.toArray().map(m => m.toJSON()),
+      marks: this.marks.toArray().map(m => m.toJS()),
     }
 
     return object
   }
 
   /**
-   * Alias `toJS`.
+   * Alias `toJSON`.
    */
 
-  toJS() {
-    return this.toJSON()
+  toJSON() {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS()
   }
 }
 

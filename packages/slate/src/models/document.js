@@ -45,7 +45,7 @@ class Document extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Document.fromJSON(attrs)
+      return Document.fromJS(attrs)
     }
 
     throw new Error(
@@ -60,7 +60,7 @@ class Document extends Record(DEFAULTS) {
    * @return {Document}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     if (Document.isDocument(object)) {
       return object
     }
@@ -80,7 +80,10 @@ class Document extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Document.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Document.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Document`.
@@ -137,11 +140,11 @@ class Document extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON(options = {}) {
+  toJS(options = {}) {
     const object = {
       object: this.object,
-      data: this.data.toJSON(),
-      nodes: this.nodes.toArray().map(n => n.toJSON(options)),
+      data: this.data.toJS(),
+      nodes: this.nodes.toArray().map(n => n.toJS(options)),
     }
 
     if (options.preserveKeys) {
@@ -155,8 +158,9 @@ class Document extends Record(DEFAULTS) {
    * Alias `toJS`.
    */
 
-  toJS(options) {
-    return this.toJSON(options)
+  toJSON(options) {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS(options)
   }
 }
 

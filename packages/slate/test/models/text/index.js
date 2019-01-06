@@ -31,9 +31,8 @@ describe('texts', () => {
 
             t(test.replace('.js', ''), () => {
               const actual = fn(input)
-              const opts = { preserveData: true }
-              const expected = output.toJSON(opts)
-              assert.deepEqual(actual.toJSON(opts), expected)
+              const expected = output.toJS()
+              assert.deepEqual(actual.toJS(), expected)
             })
           }
         })

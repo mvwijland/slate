@@ -52,7 +52,7 @@ class Operation extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Operation.fromJSON(attrs)
+      return Operation.fromJS(attrs)
     }
 
     throw new Error(
@@ -85,7 +85,7 @@ class Operation extends Record(DEFAULTS) {
    * @return {Operation}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     if (Operation.isOperation(object)) {
       return object
     }
@@ -96,7 +96,7 @@ class Operation extends Record(DEFAULTS) {
 
     if (!ATTRIBUTES) {
       throw new Error(
-        `\`Operation.fromJSON\` was passed an unrecognized operation type: "${type}"`
+        `\`Operation.fromJS\` was passed an unrecognized operation type: "${type}"`
       )
     }
 
@@ -112,7 +112,7 @@ class Operation extends Record(DEFAULTS) {
         if (key == 'node' && type != 'insert_node') continue
 
         throw new Error(
-          `\`Operation.fromJSON\` was passed a "${type}" operation without the required "${key}" attribute.`
+          `\`Operation.fromJS\` was passed a "${type}" operation without the required "${key}" attribute.`
         )
       }
 
@@ -182,7 +182,10 @@ class Operation extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Operation.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Operation.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Operation`.
@@ -231,7 +234,7 @@ class Operation extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON(options = {}) {
+  toJS(options = {}) {
     const { object, type } = this
     const json = { object, type }
     const ATTRIBUTES = OPERATION_ATTRIBUTES[type]
@@ -247,7 +250,7 @@ class Operation extends Record(DEFAULTS) {
       if (key == 'node' && type != 'insert_node') continue
 
       if (key == 'mark' || key == 'marks' || key == 'node') {
-        value = value.toJSON()
+        value = value.toJS()
       }
 
       if (key == 'properties' && type == 'merge_node') {
@@ -281,7 +284,7 @@ class Operation extends Record(DEFAULTS) {
         if ('isBackward' in value) v.isBackward = value.isBackward
         if ('isFocused' in value) v.isFocused = value.isFocused
         if ('marks' in value)
-          v.marks = value.marks == null ? null : value.marks.toJSON()
+          v.marks = value.marks == null ? null : value.marks.toJS()
         value = v
       }
 
@@ -307,11 +310,12 @@ class Operation extends Record(DEFAULTS) {
   }
 
   /**
-   * Alias `toJS`.
+   * Alias `toJSON`.
    */
 
-  toJS(options) {
-    return this.toJSON(options)
+  toJSON(options) {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS(options)
   }
 }
 

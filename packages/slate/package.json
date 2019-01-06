@@ -25,7 +25,7 @@
     "type-of": "^2.0.1"
   },
   "peerDependencies": {
-    "immutable": ">=3.8.1",
+    "immutable": ">=4.0.0-rc.12",
     "react": ">=0.14.0"
   },
   "devDependencies": {

@@ -47,7 +47,7 @@ class Inline extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Inline.fromJSON(attrs)
+      return Inline.fromJS(attrs)
     }
 
     throw new Error(
@@ -80,7 +80,7 @@ class Inline extends Record(DEFAULTS) {
    * @return {Inline}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     if (Inline.isInline(object)) {
       return object
     }
@@ -112,7 +112,10 @@ class Inline extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Inline.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Inline.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Inline`.
@@ -181,13 +184,13 @@ class Inline extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON(options = {}) {
+  toJS(options = {}) {
     const object = {
       object: this.object,
       type: this.type,
       isVoid: this.isVoid,
-      data: this.data.toJSON(),
-      nodes: this.nodes.toArray().map(n => n.toJSON(options)),
+      data: this.data.toJS(),
+      nodes: this.nodes.toArray().map(n => n.toJS(options)),
     }
 
     if (options.preserveKeys) {
@@ -201,8 +204,9 @@ class Inline extends Record(DEFAULTS) {
    * Alias `toJS`.
    */
 
-  toJS(options) {
-    return this.toJSON(options)
+  toJSON(options) {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS(options)
   }
 }
 

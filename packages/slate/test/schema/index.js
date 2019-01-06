@@ -25,7 +25,7 @@ describe('schema', () => {
           .change()
           .setValue({ schema: s })
           .normalize()
-          .value.toJSON()
+          .value.toJS()
 
         assert.deepEqual(actual, expected)
       })
@@ -44,12 +44,12 @@ describe('schema', () => {
         const module = require(resolve(testsDir, test))
         const { input, output, schema } = module
         const s = Schema.create(schema)
-        const expected = output.toJSON()
+        const expected = output.toJS()
         const actual = input
           .change()
           .setValue({ schema: s })
           .normalize()
-          .value.toJSON()
+          .value.toJS()
 
         assert.deepEqual(actual, expected)
       })

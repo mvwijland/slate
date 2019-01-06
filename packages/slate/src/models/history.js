@@ -45,7 +45,7 @@ class History extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return History.fromJSON(attrs)
+      return History.fromJS(attrs)
     }
 
     throw new Error(
@@ -81,7 +81,7 @@ class History extends Record(DEFAULTS) {
    * @return {History}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     const { redos = [], undos = [] } = object
 
     const history = new History({
@@ -96,7 +96,10 @@ class History extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = History.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return History.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `History`.
@@ -182,11 +185,11 @@ class History extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON() {
+  toJS() {
     const object = {
       object: this.object,
-      redos: this.redos.toJSON(),
-      undos: this.undos.toJSON(),
+      redos: this.redos.toJS(),
+      undos: this.undos.toJS(),
     }
 
     return object
@@ -196,8 +199,9 @@ class History extends Record(DEFAULTS) {
    * Alias `toJS`.
    */
 
-  toJS() {
-    return this.toJSON()
+  toJSON() {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS()
   }
 }
 

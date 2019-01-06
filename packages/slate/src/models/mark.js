@@ -41,7 +41,7 @@ class Mark extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Mark.fromJSON(attrs)
+      return Mark.fromJS(attrs)
     }
 
     throw new Error(
@@ -109,7 +109,7 @@ class Mark extends Record(DEFAULTS) {
    * @return {Mark}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     const { data = {}, type } = object
 
     if (typeof type != 'string') {
@@ -118,7 +118,7 @@ class Mark extends Record(DEFAULTS) {
 
     const mark = new Mark({
       type,
-      data: new Map(data),
+      data: Data.fromJS(data),
     })
 
     return mark
@@ -128,7 +128,10 @@ class Mark extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Mark.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Mark.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Mark`.
@@ -183,22 +186,23 @@ class Mark extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON() {
+  toJS() {
     const object = {
       object: this.object,
       type: this.type,
-      data: this.data.toJSON(),
+      data: this.data.toJS(),
     }
 
     return object
   }
 
   /**
-   * Alias `toJS`.
+   * Alias `toJSON`.
    */
 
-  toJS() {
-    return this.toJSON()
+  toJSON() {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS()
   }
 }
 

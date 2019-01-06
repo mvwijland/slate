@@ -20,8 +20,8 @@ describe('serializers', () => {
         it(test, async () => {
           const module = require(resolve(dir, test))
           const { input, output, options } = module
-          const actual = Value.fromJSON(input, options).toJSON()
-          const expected = output.toJSON()
+          const actual = Value.fromJS(input, options).toJS()
+          const expected = output.toJS()
           assert.deepEqual(actual, expected)
         })
       }
@@ -38,7 +38,7 @@ describe('serializers', () => {
         it(test, async () => {
           const module = require(resolve(dir, test))
           const { input, output, options } = module
-          const actual = input.toJSON(options)
+          const actual = input.toJS(options)
           const expected = output
           assert.deepEqual(actual, expected)
         })

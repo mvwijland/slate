@@ -38,8 +38,8 @@ describe('operations', async () => {
                 preserveDecorations: true,
                 preserveData: true,
               }
-              const actual = change.value.toJSON(opts)
-              const expected = output.toJSON(opts)
+              const actual = change.value.toJS(opts)
+              const expected = output.toJS(opts)
 
               assert.deepEqual(actual, expected)
             })

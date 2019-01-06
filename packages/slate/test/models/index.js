@@ -21,12 +21,12 @@ describe('models', () => {
           const module = require(resolve(testsDir, test))
           const { input, output, schema, flags, customChange } = module
           const s = Schema.create(schema)
-          const expected = output.toJSON()
+          const expected = output.toJS()
           const actual = input
             .change(flags)
             .setValue({ schema: s })
             .withoutNormalization(customChange)
-            .value.toJSON()
+            .value.toJS()
 
           assert.deepEqual(actual, expected)
         })

@@ -42,7 +42,7 @@ class Range extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Range.fromJSON(attrs)
+      return Range.fromJS(attrs)
     }
 
     throw new Error(
@@ -117,7 +117,7 @@ class Range extends Record(DEFAULTS) {
    * @return {Range}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     const {
       anchorKey = null,
       anchorOffset = 0,
@@ -136,7 +136,7 @@ class Range extends Record(DEFAULTS) {
       focusOffset,
       isBackward,
       isFocused,
-      marks: marks == null ? null : new Set(marks.map(Mark.fromJSON)),
+      marks: marks == null ? null : Mark.createSet(marks),
       isAtomic,
     })
 
@@ -147,7 +147,10 @@ class Range extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Range.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Range.fromJS(object)
+  }
 
   /**
    * Check if an `obj` is a `Range`.
@@ -777,7 +780,7 @@ class Range extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON() {
+  toJS() {
     const object = {
       object: this.object,
       anchorKey: this.anchorKey,
@@ -787,7 +790,7 @@ class Range extends Record(DEFAULTS) {
       isBackward: this.isBackward,
       isFocused: this.isFocused,
       marks:
-        this.marks == null ? null : this.marks.toArray().map(m => m.toJSON()),
+        this.marks == null ? null : this.marks.toArray().map(m => m.toJS()),
       isAtomic: this.isAtomic,
     }
 
@@ -798,8 +801,9 @@ class Range extends Record(DEFAULTS) {
    * Alias `toJS`.
    */
 
-  toJS() {
-    return this.toJSON()
+  toJSON() {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS()
   }
 }
 

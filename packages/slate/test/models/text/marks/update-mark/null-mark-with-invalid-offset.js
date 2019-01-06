@@ -1,12 +1,12 @@
 /** @jsx h */
 
-import { Mark } from '../../../../..'
+import { Mark, Data } from '../../../../..'
 import h from '../../../../helpers/h'
 
 export const input = <b />[0]
 
 export default function(t) {
-  return t.updateMark(0, 1, Mark.create('bold'), { data: { x: 1 } })
+  return t.updateMark(0, 1, Mark.create('bold'), { data: Data.fromJS({ x: 1 }) })
 }
 
 export const output = input

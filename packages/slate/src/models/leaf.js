@@ -41,7 +41,7 @@ class Leaf extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Leaf.fromJSON(attrs)
+      return Leaf.fromJS(attrs)
     }
 
     throw new Error(
@@ -183,12 +183,12 @@ class Leaf extends Record(DEFAULTS) {
    * @return {Leaf}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     const { text = '', marks = [] } = object
 
     const leaf = new Leaf({
       text,
-      marks: Set(marks.map(Mark.fromJSON)),
+      marks: Set(marks.map(Mark.fromJS)),
     })
 
     return leaf
@@ -198,7 +198,10 @@ class Leaf extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Leaf.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Leaf.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Leaf`.
@@ -311,22 +314,23 @@ class Leaf extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON() {
+  toJS() {
     const object = {
       object: this.object,
       text: this.text,
-      marks: this.marks.toArray().map(m => m.toJSON()),
+      marks: this.marks.toArray().map(m => m.toJS()),
     }
 
     return object
   }
 
   /**
-   * Alias `toJS`.
+   * Alias `toJSON`.
    */
 
-  toJS() {
-    return this.toJSON()
+  toJSON() {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS()
   }
 }
 

@@ -1,5 +1,6 @@
 import isPlainObject from 'is-plain-object'
 import { Map } from 'immutable'
+import logger from '@gitbook/slate-dev-logger'
 
 /**
  * Data.
@@ -24,7 +25,7 @@ class Data {
     }
 
     if (isPlainObject(attrs)) {
-      return Data.fromJSON(attrs)
+      return Data.fromJS(attrs)
     }
 
     throw new Error(
@@ -39,15 +40,18 @@ class Data {
    * @return {Data}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     return new Map(object)
   }
 
   /**
-   * Alias `fromJS`.
+   * Alias `fromJSON`.
    */
 
-  static fromJS = Data.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Data.fromJS(object)
+  }
 }
 
 /**

@@ -93,13 +93,15 @@ describe('slate-hyperscript', () => {
         const expected = Value.isValue(output) ? output.toJSON() : output
         assert.deepEqual(actual, expected)
 
+        const actualDecorations = input.decorations.toArray().map(m => m.toJS())
+
         // ensure expected properties of decorations match
         // note: they are expected to match order in test result
         expectDecorations.forEach((decoration, i) => {
           Object.keys(decoration).forEach(prop => {
             assert.deepEqual(
               decoration[prop],
-              input.decorations.toJS()[i][prop],
+              actualDecorations[i][prop],
               `decoration ${i} had incorrect prop: ${prop}`
             )
           })

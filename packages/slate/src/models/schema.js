@@ -67,7 +67,7 @@ class Schema extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Schema.fromJSON(attrs)
+      return Schema.fromJS(attrs)
     }
 
     throw new Error(
@@ -82,7 +82,7 @@ class Schema extends Record(DEFAULTS) {
    * @return {Schema}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     if (Schema.isSchema(object)) {
       return object
     }
@@ -115,7 +115,10 @@ class Schema extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Schema.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Schema.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Schema`.
@@ -448,7 +451,7 @@ class Schema extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON() {
+  toJS() {
     const object = {
       object: this.object,
       document: this.document,
@@ -463,8 +466,9 @@ class Schema extends Record(DEFAULTS) {
    * Alias `toJS`.
    */
 
-  toJS() {
-    return this.toJSON()
+  toJSON() {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS()
   }
 }
 

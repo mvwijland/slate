@@ -46,7 +46,7 @@ class Value extends Record(DEFAULTS) {
     }
 
     if (isPlainObject(attrs)) {
-      return Value.fromJSON(attrs, options)
+      return Value.fromJS(attrs, options)
     }
 
     throw new Error(
@@ -94,12 +94,12 @@ class Value extends Record(DEFAULTS) {
    * @return {Value}
    */
 
-  static fromJSON(object, options = {}) {
+  static fromJS(object, options = {}) {
     let { document = {}, selection = {}, schema = {}, history = {} } = object
 
     let data = new Map()
 
-    document = Document.fromJSON(document)
+    document = Document.fromJS(document)
 
     // rebuild selection from anchorPath and focusPath if keys were dropped
     const { anchorPath, focusPath, anchorKey, focusKey } = selection
@@ -112,9 +112,9 @@ class Value extends Record(DEFAULTS) {
       selection.focusKey = document.assertPath(focusPath).key
     }
 
-    selection = Range.fromJSON(selection)
-    schema = Schema.fromJSON(schema)
-    history = History.fromJSON(history)
+    selection = Range.fromJS(selection)
+    schema = Schema.fromJS(schema)
+    history = History.fromJS(history)
 
     // Allow plugins to set a default value for `data`.
     if (options.plugins) {
@@ -152,7 +152,10 @@ class Value extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Value.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Value.fromJS(object)
+  }
 
   /**
    * Check if a `value` is a `Value`.
@@ -649,32 +652,32 @@ class Value extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON(options = {}) {
+  toJS(options = {}) {
     const object = {
       object: this.object,
-      document: this.document.toJSON(options),
+      document: this.document.toJS(options),
     }
 
     if (options.preserveData) {
-      object.data = this.data.toJSON()
+      object.data = this.data.toJS()
     }
 
     if (options.preserveDecorations) {
       object.decorations = this.decorations
-        ? this.decorations.toArray().map(d => d.toJSON())
+        ? this.decorations.toArray().map(d => d.toJS())
         : null
     }
 
     if (options.preserveHistory) {
-      object.history = this.history.toJSON()
+      object.history = this.history.toJS()
     }
 
     if (options.preserveSelection) {
-      object.selection = this.selection.toJSON()
+      object.selection = this.selection.toJS()
     }
 
     if (options.preserveSchema) {
-      object.schema = this.schema.toJSON()
+      object.schema = this.schema.toJS()
     }
 
     if (options.preserveSelection && !options.preserveKeys) {
@@ -718,8 +721,9 @@ class Value extends Record(DEFAULTS) {
    * Alias `toJS`.
    */
 
-  toJS(options) {
-    return this.toJSON(options)
+  toJSON(options) {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS(options)
   }
 }
 

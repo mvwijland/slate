@@ -47,7 +47,7 @@ class Text extends Record(DEFAULTS) {
         attrs = { key, leaves: [{ text, marks }] }
       }
 
-      return Text.fromJSON(attrs)
+      return Text.fromJS(attrs)
     }
 
     throw new Error(
@@ -80,7 +80,7 @@ class Text extends Record(DEFAULTS) {
    * @return {Text}
    */
 
-  static fromJSON(object) {
+  static fromJS(object) {
     if (Text.isText(object)) {
       return object
     }
@@ -108,7 +108,10 @@ class Text extends Record(DEFAULTS) {
    * Alias `fromJS`.
    */
 
-  static fromJS = Text.fromJSON
+  static fromJSON(object) {
+    logger.deprecate('slate@0.35.0', 'fromJSON methods are deprecated, use fromJS instead');
+    return Text.fromJS(object)
+  }
 
   /**
    * Check if `any` is a `Text`.
@@ -636,12 +639,12 @@ class Text extends Record(DEFAULTS) {
    * @return {Object}
    */
 
-  toJSON(options = {}) {
+  toJS(options = {}) {
     const object = {
       object: this.object,
       leaves: this.getLeaves()
         .toArray()
-        .map(r => r.toJSON()),
+        .map(r => r.toJS()),
     }
 
     if (options.preserveKeys) {
@@ -652,11 +655,12 @@ class Text extends Record(DEFAULTS) {
   }
 
   /**
-   * Alias `toJS`.
+   * Alias `toJSON`.
    */
 
-  toJS(options) {
-    return this.toJSON(options)
+  toJSON(options) {
+    logger.deprecate('slate@0.35.0', 'toJSON methods are deprecated, use toJS instead');
+    return this.toJS(options)
   }
 
   /**
