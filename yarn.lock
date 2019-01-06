@@ -4211,6 +4211,10 @@ immutable@^3.8.1:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
 
+immutablejs-record-memoize@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/immutablejs-record-memoize/-/immutablejs-record-memoize-1.0.1.tgz#668ebe616f2bd743ce890321fa451f0c791dadce"
+
 import-local@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/import-local/-/import-local-1.0.0.tgz#5e4ffdc03f4fe6c009c6729beb29631c2f8227bc"

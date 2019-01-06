@@ -1,8 +1,8 @@
 import logger from '@gitbook/slate-dev-logger'
 import { Record } from 'immutable'
+import memoize from 'immutablejs-record-memoize'
 
 import MODEL_TYPES from '../constants/model-types'
-import memoize from '../utils/memoize'
 
 /**
  * Default properties.

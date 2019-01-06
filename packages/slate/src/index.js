@@ -1,3 +1,5 @@
+import { resetMemoization, useMemoization } from 'immutablejs-record-memoize'
+
 import Block from './models/block'
 import Change from './models/change'
 import Changes from './changes'
@@ -17,7 +19,6 @@ import Stack from './models/stack'
 import Text from './models/text'
 import Value from './models/value'
 import { resetKeyGenerator, setKeyGenerator } from './utils/generate-key'
-import { resetMemoization, useMemoization } from './utils/memoize'
 
 /**
  * Export.

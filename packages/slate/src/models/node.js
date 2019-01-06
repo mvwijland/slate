@@ -2,6 +2,7 @@ import direction from 'direction'
 import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
 import { List, OrderedSet, Set } from 'immutable'
+import memoize from 'immutablejs-record-memoize'
 
 import Data from './data'
 import Block from './block'
@@ -11,7 +12,6 @@ import { isType } from '../constants/model-types'
 import Range from './range'
 import Text from './text'
 import generateKey from '../utils/generate-key'
-import memoize from '../utils/memoize'
 
 /**
  * Node.

@@ -1,11 +1,11 @@
 import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
 import { List, OrderedSet, Record, Set } from 'immutable'
+import memoize from 'immutablejs-record-memoize'
 
 import Leaf from './leaf'
 import MODEL_TYPES, { isType } from '../constants/model-types'
 import generateKey from '../utils/generate-key'
-import memoize from '../utils/memoize'
 
 /**
  * Default properties.

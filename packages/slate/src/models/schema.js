@@ -3,6 +3,7 @@ import isPlainObject from 'is-plain-object'
 import logger from '@gitbook/slate-dev-logger'
 import mergeWith from 'lodash/mergeWith'
 import { Record } from 'immutable'
+import memoize from 'immutablejs-record-memoize'
 
 import {
   CHILD_OBJECT_INVALID,
@@ -24,7 +25,6 @@ import {
 import CORE_SCHEMA_RULES from '../constants/core-schema-rules'
 import MODEL_TYPES from '../constants/model-types'
 import Stack from './stack'
-import memoize from '../utils/memoize'
 
 /**
  * Debug.

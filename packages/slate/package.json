@@ -19,6 +19,7 @@
     "direction": "^0.1.5",
     "esrever": "^0.2.0",
     "is-empty": "^1.0.0",
+    "immutablejs-record-memoize": "^1.0.1",
     "is-plain-object": "^2.0.4",
     "lodash": "^4.17.4",
     "type-of": "^2.0.1"
