@@ -260,10 +260,11 @@ class Content extends React.Component {
    * children, such as void nodes and other nested Slate editors.
    *
    * @param {Element} target
+   * @param {Boolean} mustBeEditable True if we need to be in edit mode
    * @return {Boolean}
    */
 
-  isInEditor = target => {
+  isInEditor = (target, mustBeEditable = true) => {
     const { element } = this
 
     let el
@@ -284,7 +285,7 @@ class Content extends React.Component {
       throw err
     }
     return (
-      el.isContentEditable &&
+      (!mustBeEditable || el.isContentEditable) &&
       (el === element || el.closest('[data-slate-editor]') === element)
     )
   }
@@ -349,8 +350,6 @@ class Content extends React.Component {
       handler == 'onBlur' ||
       handler == 'onCompositionEnd' ||
       handler == 'onCompositionStart' ||
-      handler == 'onCopy' ||
-      handler == 'onCut' ||
       handler == 'onFocus' ||
       handler == 'onInput' ||
       handler == 'onKeyDown' ||
@@ -359,6 +358,11 @@ class Content extends React.Component {
       handler == 'onSelect'
     ) {
       if (!this.isInEditor(event.target)) return
+    }
+
+    // Same for the following events, except they work in read mode too.
+    if (handler == 'onCopy' || handler == 'onCut') {
+      if (!this.isInEditor(event.target, false)) return
     }
 
     this.props[handler](event)

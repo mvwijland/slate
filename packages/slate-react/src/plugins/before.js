@@ -201,8 +201,6 @@ function BeforePlugin() {
    */
 
   function onCut(event, change, editor) {
-    if (editor.props.readOnly) return true
-
     const window = getWindow(event.target)
     isCopying = true
     window.requestAnimationFrame(() => (isCopying = false))
