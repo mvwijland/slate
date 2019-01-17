@@ -11,6 +11,7 @@ import {
 } from '@gitbook/slate-dev-environment'
 
 import findNode from '../utils/find-node'
+import findRange from '../utils/find-range'
 
 /**
  * Debug.
@@ -19,6 +20,41 @@ import findNode from '../utils/find-node'
  */
 
 const debug = Debug('slate:before')
+
+/**
+ * In edit mode, uses the current change selection. In read mode,
+ * tries to compute the current Slate range from the native
+ * selection, and returns the updated change.
+ * Returns null if no selection could be computed.
+ *
+ * @param {Event} event
+ * @param {Change} change
+ * @param {Editor} editor
+ * @returns {Boolean} False if we could not determine get a Slate selection
+ */
+
+function ensureSlateSelection(event, change, editor) {
+  const { readOnly } = editor.props
+  const { value } = change
+
+  if (!readOnly) {
+    return true
+  }
+
+  // We need to compute the current selection
+  const window = getWindow(event.target)
+  const native = window.getSelection()
+  const range = findRange(native, value)
+
+  if (!range) {
+    // We don't have a Slate selection
+    return false
+  }
+
+  // Ensure the value has the correct selection set
+  change.select(range)
+  return true
+}
 
 /**
  * The core before plugin.
@@ -186,6 +222,15 @@ function BeforePlugin() {
 
   function onCopy(event, change, editor) {
     const window = getWindow(event.target)
+
+    const hasSelection = ensureSlateSelection(event, change, editor)
+
+    if (!hasSelection) {
+      // We don't have a selection, so let the browser
+      // handle the copy, and do not call other plugins
+      return true
+    }
+
     isCopying = true
     window.requestAnimationFrame(() => (isCopying = false))
 

@@ -348,6 +348,7 @@ class Content extends React.Component {
     if (
       handler == 'onBeforeInput' ||
       handler == 'onBlur' ||
+      handler == 'onCut' ||
       handler == 'onCompositionEnd' ||
       handler == 'onCompositionStart' ||
       handler == 'onFocus' ||
@@ -361,7 +362,7 @@ class Content extends React.Component {
     }
 
     // Same for the following events, except they work in read mode too.
-    if (handler == 'onCopy' || handler == 'onCut') {
+    if (handler == 'onCopy') {
       if (!this.isInEditor(event.target, false)) return
     }
 

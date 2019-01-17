@@ -19,39 +19,6 @@ import getEventTransfer from '../utils/get-event-transfer'
 import setEventTransfer from '../utils/set-event-transfer'
 
 /**
- * In edit mode, uses the value.selection. In read mode,
- * tries to compute the current Slate range from the native
- * selection, and returns the updated value.
- * Returns null if no selection could be computed.
- *
- * @param {Event} event
- * @param {Value} value
- * @param {Editor} editor
- * @returns {Value | Null} The current selection
- */
-
-function ensureValueSelection(event, value, editor) {
-  const { readOnly } = editor.props
-
-  if (!readOnly) {
-    return value
-  }
-
-  // We need to compute the current selection
-  const window = getWindow(event.target)
-  const native = window.getSelection()
-  const range = findRange(native, value)
-
-  if (!range) {
-    // We don't have a Slate selection
-    return null
-  }
-
-  // Ensure the value has the correct selection set
-  return value.change().select(range).value
-}
-
-/**
  * Debug.
  *
  * @type {Function}
@@ -142,15 +109,7 @@ function AfterPlugin() {
   function onCopy(event, change, editor) {
     debug('onCopy', { event })
 
-    const valueWithSelection = ensureValueSelection(event, change.value, editor)
-
-    if (!valueWithSelection) {
-      // We don't have a selection, so let the browser
-      // handle the copy
-      return
-    }
-
-    cloneFragment(event, valueWithSelection)
+    cloneFragment(event, change.value)
   }
 
   /**
@@ -164,15 +123,8 @@ function AfterPlugin() {
   function onCut(event, change, editor) {
     debug('onCut', { event })
 
-    const valueWithSelection = ensureValueSelection(event, change.value, editor)
-
-    if (!valueWithSelection) {
-      // We don't have a selection, so let the browser
-      // handle the cut
-      return
-    }
-
-    cloneFragment(event, valueWithSelection)
+    const { value } = change
+    cloneFragment(event, value)
 
     if (editor.props.readOnly) {
       // We can only copy the content, so stop here
@@ -186,7 +138,7 @@ function AfterPlugin() {
     window.requestAnimationFrame(() => {
       // If user cuts a void block node or a void inline node,
       // manually removes it since selection is collapsed in this case.
-      const { endBlock, endInline, isCollapsed } = valueWithSelection
+      const { endBlock, endInline, isCollapsed } = value
       const isVoidBlock = endBlock && endBlock.isVoid && isCollapsed
       const isVoidInline = endInline && endInline.isVoid && isCollapsed
 
