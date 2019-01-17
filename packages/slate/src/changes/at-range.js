@@ -1146,12 +1146,10 @@ Changes.unwrapBlockAtRange = (change, range, properties, options = {}) => {
   properties = Node.createProperties(properties)
 
   const normalize = change.getFlag('normalize', options)
-  const { value } = change
-  let { document } = value
-  const blocks = document.getBlocksAtRange(range)
+  const blocks = change.value.document.getBlocksAtRange(range)
   const wrappers = blocks
     .map(block => {
-      return document.getClosest(block.key, parent => {
+      return change.value.document.getClosest(block.key, parent => {
         if (parent.object != 'block') return false
         if (properties.type != null && parent.type != properties.type)
           return false
@@ -1169,7 +1167,7 @@ Changes.unwrapBlockAtRange = (change, range, properties, options = {}) => {
   wrappers.forEach(block => {
     const first = block.nodes.first()
     const last = block.nodes.last()
-    const parent = document.getParent(block.key)
+    const parent = change.value.document.getParent(block.key)
     const index = parent.nodes.indexOf(block)
 
     const children = block.nodes.filter(child => {
@@ -1209,12 +1207,10 @@ Changes.unwrapBlockAtRange = (change, range, properties, options = {}) => {
         normalize: false,
       })
 
-      document = change.value.document
-
       children.forEach((child, i) => {
         if (i == 0) {
           const extra = child
-          child = document.getNextBlock(child.key)
+          child = change.value.document.getNextBlock(child.key)
           change.removeNodeByKey(extra.key, { normalize: false })
         }
 
