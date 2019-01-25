@@ -5,7 +5,7 @@ import globals from 'rollup-plugin-node-globals'
 import json from 'rollup-plugin-json'
 import replace from 'rollup-plugin-replace'
 import resolve from 'rollup-plugin-node-resolve'
-import uglify from 'rollup-plugin-uglify'
+import { terser } from 'rollup-plugin-terser'
 import { startCase } from 'lodash'
 
 /**
@@ -81,7 +81,7 @@ function configure(pkg, env, target) {
 
     // Only minify the output in production, since it is very slow. And only
     // for UMD builds, since modules will be bundled by the consumer.
-    isUmd && isProd && uglify(),
+    isUmd && isProd && terser(),
   ].filter(Boolean)
 
   if (isUmd) {

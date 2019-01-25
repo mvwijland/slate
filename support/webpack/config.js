@@ -2,17 +2,16 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackTemplate = require('html-webpack-template')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
-const DefinePlugin = webpack.DefinePlugin
-const NamedModulesPlugin = webpack.NamedModulesPlugin
 const HotModuleReplacementPlugin = webpack.HotModuleReplacementPlugin
 const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
 
 const config = {
+  mode: IS_PROD ? 'production' : 'development',
   entry: ['react-hot-loader/patch', './examples/index.js'],
   output: {
     path: path.resolve(__dirname, '../../build'),
@@ -23,6 +22,14 @@ const config = {
     contentBase: './examples',
     publicPath: '/',
     hot: true,
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        sourceMap: true,
+        parallel: true,
+      }),
+    ],
   },
   module: {
     rules: [
@@ -36,34 +43,31 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
-            forceEnv: 'webpack',
+            envName: 'webpack',
           },
         },
         exclude: /node_modules/,
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true,
-              },
+        use: [
+          IS_DEV ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
             },
-          ],
-        }),
+          },
+        ],
       },
     ],
   },
   plugins: [
-    new DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        IS_PROD ? 'production' : 'development'
-      ),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: '[name]-[contenthash].css',
     }),
-    new ExtractTextPlugin('[name]-[contenthash].css'),
     new HtmlWebpackPlugin({
       title: 'Slate',
       template: HtmlWebpackTemplate,
@@ -75,8 +79,6 @@ const config = {
       ],
     }),
     IS_PROD && new CopyWebpackPlugin(['examples/CNAME']),
-    IS_PROD && new UglifyJSPlugin({ sourceMap: true }),
-    IS_DEV && new NamedModulesPlugin(),
     IS_DEV && new HotModuleReplacementPlugin(),
   ].filter(Boolean),
 }
