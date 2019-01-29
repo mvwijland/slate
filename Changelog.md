@@ -1,14 +1,10 @@
-# Changelog
+# Release notes
 
-Since Slate is a monorepo with many packages that are versioned separately, we maintain a changelog for each individual package:
+Slate is a monorepo. All notable changes to any of the Slate package will be documented in this file. Slate adheres to [Semantic Versioning](http://semver.org/).
 
-* [`slate`](./packages/slate/Changelog.md)
-* [`slate-base64-serializer`](./packages/slate-base64-serializer/Changelog.md)
-* [`slate-dev-logger`](./packages/slate-dev-logger/Changelog.md)
-* [`slate-html-serializer`](./packages/slate-html-serializer/Changelog.md)
-* [`slate-hyperscript`](./packages/slate-hyperscript/Changelog.md)
-* [`slate-plain-serializer`](./packages/slate-plain-serializer/Changelog.md)
-* [`slate-prop-types`](./packages/slate-prop-types/Changelog.md)
-* [`slate-react`](./packages/slate-react/Changelog.md)
-* [`slate-schema-violations`](./packages/slate-schema-violations/Changelog.md)
-* [`slate-simulator`](./packages/slate-simulator/Changelog.md)
+All packages follow the same versions. Before 1.0.0, each package was progressing independently, and they had individual changelogs.
+
+# 1.0.0
+
+* Now releasing all packages under the same version for simplicity.
+* Slate is now compiled for evergreen browsers (https://github.com/GitbookIO/slate/pull/18)
