@@ -4304,9 +4304,9 @@ he@1.1.x:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
-heapdump@^0.3.10:
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/heapdump/-/heapdump-0.3.10.tgz#c28a7068a7b252c7438d69d97f5ac0c9df424b82"
+heapdump@^0.3.12:
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/heapdump/-/heapdump-0.3.12.tgz#5623be7816a8a92ab2d42b1b422f9e829a58da89"
   dependencies:
     nan "^2.11.1"
 
