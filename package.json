@@ -86,7 +86,7 @@
   },
   "scripts": {
     "memory": "node --expose-gc ./tmp/memory/index.js",
-    "memory:prepare": "mkdir -p ./tmp && cross-env BABEL_ENV=benchmark babel memory --out-dir tmp/memory/",
+    "prememory": "mkdir -p ./tmp && cross-env BABEL_ENV=benchmark babel memory --out-dir tmp/memory/",
     "benchmark": "cross-env COMPARE=compare node --expose-gc ./tmp/benchmark/index.js",
     "benchmark:save": " yarn benchmark:prepare && node --expose-gc ./tmp/benchmark/index.js",
     "benchmark:prepare": "mkdir -p ./tmp && cross-env BABEL_ENV=benchmark babel benchmark --out-dir tmp/benchmark/",
