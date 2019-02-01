@@ -8,7 +8,7 @@
   "module": "lib/slate-auto-replace.es.js",
   "umd": "dist/slate-auto-replace.js",
   "umdMin": "dist/slate-auto-replace.min.js",
-    "dependencies": {
+  "dependencies": {
     "type-of": "^2.0.1"
   },
   "peerDependencies": {
@@ -18,6 +18,8 @@
     "@gitbook/slate": "^1.0.0"
   },
   "keywords": [
-    "slate"
+    "slate",
+    "replace",
+    "markdown"
   ]
 }

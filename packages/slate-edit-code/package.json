@@ -12,7 +12,7 @@
     "is-hotkey": "^0.1.1"
   },
   "peerDependencies": {
-    "immutable": "^3.8.1",
+    "immutable": ">=4.0.0-rc.12",
     "@gitbook/slate": "^0.34.7",
     "@gitbook/slate-react": "^0.13.4",
     "@gitbook/slate-schema-violations": "^0.1.20"
@@ -35,7 +35,7 @@
     "flow-bin": "^0.57.3",
     "gh-pages": "^0.11.0",
     "http-server": "^0.9.0",
-    "immutable": "^3.8.1",
+    "immutable": ">=4.0.0-rc.12",
     "mocha": "^3.0.1",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",

@@ -30,8 +30,8 @@
     "selection-is-backward": "^1.0.0"
   },
   "peerDependencies": {
-    "@gitbook/slate": ">=0.32.0",
-    "immutable": ">=3.8.1",
+    "@gitbook/slate": "*",
+    "immutable": ">=4.0.0-rc.12",
     "react": ">=0.14.0",
     "react-dom": ">=0.14.0"
   },
@@ -39,7 +39,7 @@
     "@gitbook/slate": "^1.0.0",
     "@gitbook/slate-hyperscript": "^1.0.0",
     "@gitbook/slate-simulator": "^1.0.0",
-    "immutable": "^3.8.1",
+    "immutable": ">=4.0.0-rc.12",
     "mocha": "^2.5.3"
   },
   "scripts": {

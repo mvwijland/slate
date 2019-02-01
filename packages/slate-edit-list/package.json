@@ -6,7 +6,7 @@
   "repository": "git://github.com/GitbookIO/slate-edit-list.git",
   "main": "./dist/index.js",
   "peerDependencies": {
-    "immutable": "^3.8.2",
+    "immutable": ">=4.0.0-rc.12",
     "@gitbook/slate": "^0.34.7"
   },
   "files": [
@@ -39,7 +39,7 @@
     "flow-copy-source": "^1.2.1",
     "gh-pages": "^0.11.0",
     "http-server": "^0.9.0",
-    "immutable": "^3.8.2",
+    "immutable": ">=4.0.0-rc.12",
     "mocha": "^3.0.1",
     "prettier": "^1.13.3",
     "react": "^16.0.0",
