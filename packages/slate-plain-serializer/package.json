@@ -3,7 +3,7 @@
   "description": "A plain text serializer for Slate editors.",
   "version": "1.0.0",
   "license": "MIT",
-  "repository": "git://github.com/ianstormtaylor/slate.git",
+  "repository": "git://github.com/GitbookIO/slate.git",
   "main": "lib/slate-plain-serializer.js",
   "module": "lib/slate-plain-serializer.es.js",
   "umd": "dist/slate-plain-serializer.js",
