@@ -1,4 +1,4 @@
-import expect from 'expect'
+
 
 export default function(plugin, change) {
   const cursorBlock = change.value.document.getDescendant('anchor')

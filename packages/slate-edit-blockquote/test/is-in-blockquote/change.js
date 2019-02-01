@@ -1,4 +1,4 @@
-import expect from 'expect'
+
 
 export default function(plugin, change) {
   const { document } = change.value

@@ -1,4 +1,4 @@
-import expect from 'expect'
+
 
 export default function(plugin, change) {
   change.call(plugin.changes.decreaseItemDepth).undo()

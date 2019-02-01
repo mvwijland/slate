@@ -1,4 +1,4 @@
-import expect from 'expect'
+
 
 export default function(plugin, change) {
   const position = plugin.utils.getPosition(change.value)
