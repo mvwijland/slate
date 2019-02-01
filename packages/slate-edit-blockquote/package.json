@@ -3,7 +3,7 @@
   "description": "A Slate plugin to handle keyboard events in blockquotes.",
   "version": "0.6.1",
   "license": "Apache-2.0",
-  "repository": "git://github.com/GitbookIO/slate-edit-blockquote.git",
+  "repository": "git://github.com/GitbookIO/slate.git",
   "main": "./dist/index.js",
   "peerDependencies": {
     "immutable": ">=4.0.0-rc.12",
