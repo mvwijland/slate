@@ -1,0 +1,24 @@
+document:
+  nodes:
+    - object: block
+      type: blockquote
+      nodes:
+        - object: block
+          type: paragraph
+          nodes:
+            - object: text
+              leaves:
+                - text: P1
+        - object: block
+          type: paragraph
+          key:  '_selection_key'
+          nodes:
+            - object: text
+              leaves:
+                - text: "P2"
+        - object: block
+          type: paragraph
+          nodes:
+            - object: text
+              leaves:
+                - text: P3

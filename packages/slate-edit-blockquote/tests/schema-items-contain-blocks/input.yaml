@@ -1,0 +1,17 @@
+document:
+  nodes:
+    - object: block
+      type: blockquote
+      nodes:
+        - object: text
+          leaves:
+            - text: "1st"
+        - object: inline
+          type: link
+          nodes:
+            - object: text
+              leaves:
+                - text: "2nd"
+        - object: text
+          leaves:
+            - text: ""

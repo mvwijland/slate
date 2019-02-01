@@ -1,0 +1,68 @@
+{
+  "name": "@gitbook/slate-edit-list",
+  "description": "A Slate plugin to handle keyboard events in lists.",
+  "version": "0.12.2",
+  "license": "Apache-2.0",
+  "repository": "git://github.com/GitbookIO/slate-edit-list.git",
+  "main": "./dist/index.js",
+  "peerDependencies": {
+    "immutable": "^3.8.2",
+    "@gitbook/slate": "^0.34.7"
+  },
+  "files": [
+    "dist",
+    "*.md"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^13.3.0",
+    "eslint": "^4.15.0",
+    "eslint-config-gitbook": "4.0.0",
+    "eslint-import-resolver-babel-module": "^4.0.0",
+    "eslint-plugin-flowtype": "^2.48.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.8.2",
+    "expect": "^1.20.2",
+    "flow-bin": "^0.57.3",
+    "flow-copy-source": "^1.2.1",
+    "gh-pages": "^0.11.0",
+    "http-server": "^0.9.0",
+    "immutable": "^3.8.2",
+    "mocha": "^3.0.1",
+    "prettier": "^1.13.3",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "@gitbook/slate": "^0.34.7",
+    "slate-hyperprint": "^2.2.4",
+    "@gitbook/slate-hyperscript": "^0.5.22",
+    "@gitbook/slate-react": "^0.13.4",
+    "stringify": "^5.1.0"
+  },
+  "scripts": {
+    "build:dist": "rm -r ./dist; babel ./lib --out-dir ./dist",
+    "build:flow": "flow-copy-source -v ./lib/ ./dist/",
+    "prepublish": "npm run build:dist && npm run build:flow",
+    "postpublish": "npm run deploy-example",
+    "lint": "eslint ./",
+    "build-example": "browserify ./example/main.js -o ./example/bundle.js -t [ babelify --presets [ env react stage-0 ] ] -t [ stringify --extensions [.yaml] ]",
+    "serve-example": "http-server ./example/ -p 8081",
+    "start": "npm run build-example && npm run serve-example",
+    "deploy-example": "npm run build-example && gh-pages -d ./example",
+    "test": "./node_modules/.bin/mocha ./tests/all.js --compilers js:babel-register --reporter=list"
+  },
+  "keywords": [
+    "slate"
+  ]
+}
