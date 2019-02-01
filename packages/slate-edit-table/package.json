@@ -25,6 +25,9 @@
     "@gitbook/slate-schema-violations": "1.0.0",
     "@gitbook/slate-simulator": "1.0.0"
   },
+  "scripts": {
+    "clean": "rm -rf ./dist ./lib ./node_modules"
+  },
   "keywords": [
     "slate"
   ]
