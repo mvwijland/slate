@@ -16,6 +16,14 @@ const BROWSERS = [
 const COMMON_PRESETS = ['@babel/preset-react']
 
 const COMMON_PLUGINS = [
+  [
+    '@babel/plugin-transform-flow-strip-types',
+    {
+      // Process only files with @flow directive, and throw errors
+      // for others that have types and are missing the directive
+      requireDirective: true,
+    },
+  ],
   '@babel/plugin-proposal-object-rest-spread',
   '@babel/plugin-proposal-class-properties',
   '@babel/plugin-proposal-export-default-from',
