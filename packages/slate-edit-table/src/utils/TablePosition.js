@@ -1,211 +1,227 @@
 // @flow
-import { Record } from 'immutable';
-import { Block, type Node } from '@gitbook/slate';
+import { Record } from 'immutable'
+import { Block, type Node } from '@gitbook/slate'
 
-import type Options from '../options';
+import type Options from '../options'
 
 class TablePosition extends Record({
-    tableBlock: null,
-    rowBlock: null,
-    cellBlock: null,
-    contentBlock: null
+  tableBlock: null,
+  rowBlock: null,
+  cellBlock: null,
+  contentBlock: null,
 }) {
-    // Block container for the table
-    tableBlock: ?Block;
+  // Block container for the table
+  tableBlock: ?Block
 
-    // Block for current row
-    rowBlock: ?Block;
+  // Block for current row
+  rowBlock: ?Block
 
-    // Block for current cell
-    cellBlock: ?Block;
+  // Block for current cell
+  cellBlock: ?Block
 
-    // Current content block in the cell
-    contentBlock: ?Block;
+  // Current content block in the cell
+  contentBlock: ?Block
 
-    /**
-     * Create a new instance of a TablePosition from a Slate document
-     * and a node key.
-     */
-    static create(
-        opts: Options,
-        containerNode: Node,
-        key: string
-    ): TablePosition {
-        const node = containerNode.getDescendant(key);
-        const ancestors = containerNode.getAncestors(key).push(node);
-        const tableBlock = ancestors.findLast(p => p.type === opts.typeTable);
-        const rowBlock = ancestors.findLast(p => p.type === opts.typeRow);
+  /**
+   * Create a new instance of a TablePosition from a Slate document
+   * and a node key.
+   */
 
-        const cellBlock = ancestors.findLast(p => p.type === opts.typeCell);
-        const contentBlock = ancestors
-            .skipUntil(ancestor => ancestor === cellBlock)
-            .skip(1)
-            .first();
+  static create(
+    opts: Options,
+    containerNode: Node,
+    key: string
+  ): TablePosition {
+    const node = containerNode.getDescendant(key)
+    const ancestors = containerNode.getAncestors(key).push(node)
+    const tableBlock = ancestors.findLast(p => p.type === opts.typeTable)
+    const rowBlock = ancestors.findLast(p => p.type === opts.typeRow)
 
-        return new TablePosition({
-            tableBlock,
-            rowBlock,
-            cellBlock,
-            contentBlock
-        });
+    const cellBlock = ancestors.findLast(p => p.type === opts.typeCell)
+    const contentBlock = ancestors
+      .skipUntil(ancestor => ancestor === cellBlock)
+      .skip(1)
+      .first()
+
+    return new TablePosition({
+      tableBlock,
+      rowBlock,
+      cellBlock,
+      contentBlock,
+    })
+  }
+
+  get table(): Block {
+    if (!this.tableBlock) {
+      throw new Error('Not in a table')
+    }
+    return this.tableBlock
+  }
+
+  get row(): Block {
+    if (!this.rowBlock) {
+      throw new Error('Not in a row')
+    }
+    return this.rowBlock
+  }
+
+  get cell(): Block {
+    if (!this.cellBlock) {
+      throw new Error('Not in a cell')
+    }
+    return this.cellBlock
+  }
+
+  /**
+   * Check to see if this position is within a cell
+   */
+
+  isInCell(): boolean {
+    return Boolean(this.cellBlock)
+  }
+
+  /**
+   * Check to see if this position is within a row
+   */
+
+  isInRow(): boolean {
+    return Boolean(this.rowBlock)
+  }
+
+  /**
+   * Check to see if this position is within a table
+   */
+
+  isInTable(): boolean {
+    return Boolean(this.tableBlock)
+  }
+
+  /**
+   * Check to see if this position is at the top of the cell.
+   */
+
+  isTopOfCell(): boolean {
+    const { contentBlock, cellBlock } = this
+
+    if (!contentBlock || !cellBlock) {
+      return false
     }
 
-    get table(): Block {
-        if (!this.tableBlock) {
-            throw new Error('Not in a table');
-        }
-        return this.tableBlock;
+    const { nodes } = cellBlock
+    const index = nodes.findIndex(block => block.key == contentBlock.key)
+
+    return index == 0
+  }
+
+  /**
+   * Check to see if this position is at the bottom of the cell.
+   */
+
+  isBottomOfCell(): boolean {
+    const { contentBlock, cellBlock } = this
+
+    if (!contentBlock || !cellBlock) {
+      return false
     }
 
-    get row(): Block {
-        if (!this.rowBlock) {
-            throw new Error('Not in a row');
-        }
-        return this.rowBlock;
-    }
+    const { nodes } = cellBlock
+    const index = nodes.findIndex(block => block.key == contentBlock.key)
 
-    get cell(): Block {
-        if (!this.cellBlock) {
-            throw new Error('Not in a cell');
-        }
-        return this.cellBlock;
-    }
+    return index == nodes.size - 1
+  }
 
-    /**
-     * Check to see if this position is within a cell
-     */
-    isInCell(): boolean {
-        return Boolean(this.cellBlock);
-    }
+  /**
+   * Get count of columns
+   */
 
-    /**
-     * Check to see if this position is within a row
-     */
-    isInRow(): boolean {
-        return Boolean(this.rowBlock);
-    }
+  getWidth(): number {
+    const { table } = this
+    const rows = table.nodes
+    const cells = rows.first().nodes
 
-    /**
-     * Check to see if this position is within a table
-     */
-    isInTable(): boolean {
-        return Boolean(this.tableBlock);
-    }
+    return cells.size
+  }
 
-    /**
-     * Check to see if this position is at the top of the cell.
-     */
-    isTopOfCell(): boolean {
-        const { contentBlock, cellBlock } = this;
+  /**
+   * Get count of rows
+   */
 
-        if (!contentBlock || !cellBlock) {
-            return false;
-        }
+  getHeight(): number {
+    const { table } = this
+    const rows = table.nodes
 
-        const { nodes } = cellBlock;
-        const index = nodes.findIndex(block => block.key == contentBlock.key);
+    return rows.size
+  }
 
-        return index == 0;
-    }
+  /**
+   * Get index of current row in the table.
+   */
 
-    /**
-     * Check to see if this position is at the bottom of the cell.
-     */
-    isBottomOfCell(): boolean {
-        const { contentBlock, cellBlock } = this;
+  getRowIndex(): number {
+    const { table, row } = this
+    const rows = table.nodes
 
-        if (!contentBlock || !cellBlock) {
-            return false;
-        }
+    return rows.findIndex(x => x === row)
+  }
 
-        const { nodes } = cellBlock;
-        const index = nodes.findIndex(block => block.key == contentBlock.key);
+  /**
+   * Get index of current column in the row.
+   */
 
-        return index == nodes.size - 1;
-    }
+  getColumnIndex(): number {
+    const { row, cell } = this
+    const cells = row.nodes
 
-    /**
-     * Get count of columns
-     */
-    getWidth(): number {
-        const { table } = this;
-        const rows = table.nodes;
-        const cells = rows.first().nodes;
+    return cells.findIndex(x => x === cell)
+  }
 
-        return cells.size;
-    }
+  /**
+   * True if on first cell of the table
+   */
 
-    /**
-     * Get count of rows
-     */
-    getHeight(): number {
-        const { table } = this;
-        const rows = table.nodes;
+  isFirstCell(): boolean {
+    return this.isFirstRow() && this.isFirstColumn()
+  }
 
-        return rows.size;
-    }
+  /**
+   * True if on last cell of the table
+   */
 
-    /**
-     * Get index of current row in the table.
-     */
-    getRowIndex(): number {
-        const { table, row } = this;
-        const rows = table.nodes;
+  isLastCell(): boolean {
+    return this.isLastRow() && this.isLastColumn()
+  }
 
-        return rows.findIndex(x => x === row);
-    }
+  /**
+   * True if on first row
+   */
 
-    /**
-     * Get index of current column in the row.
-     */
-    getColumnIndex(): number {
-        const { row, cell } = this;
-        const cells = row.nodes;
+  isFirstRow(): boolean {
+    return this.getRowIndex() === 0
+  }
 
-        return cells.findIndex(x => x === cell);
-    }
+  /**
+   * True if on last row
+   */
 
-    /**
-     * True if on first cell of the table
-     */
-    isFirstCell(): boolean {
-        return this.isFirstRow() && this.isFirstColumn();
-    }
+  isLastRow(): boolean {
+    return this.getRowIndex() === this.getHeight() - 1
+  }
 
-    /**
-     * True if on last cell of the table
-     */
-    isLastCell(): boolean {
-        return this.isLastRow() && this.isLastColumn();
-    }
+  /**
+   * True if on first column
+   */
 
-    /**
-     * True if on first row
-     */
-    isFirstRow(): boolean {
-        return this.getRowIndex() === 0;
-    }
+  isFirstColumn(): boolean {
+    return this.getColumnIndex() === 0
+  }
 
-    /**
-     * True if on last row
-     */
-    isLastRow(): boolean {
-        return this.getRowIndex() === this.getHeight() - 1;
-    }
+  /**
+   * True if on last column
+   */
 
-    /**
-     * True if on first column
-     */
-    isFirstColumn(): boolean {
-        return this.getColumnIndex() === 0;
-    }
-
-    /**
-     * True if on last column
-     */
-    isLastColumn(): boolean {
-        return this.getColumnIndex() === this.getWidth() - 1;
-    }
+  isLastColumn(): boolean {
+    return this.getColumnIndex() === this.getWidth() - 1
+  }
 }
 
-export default TablePosition;
+export default TablePosition

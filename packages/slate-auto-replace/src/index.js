@@ -1,4 +1,3 @@
-
 import typeOf from 'type-of'
 
 /**
@@ -70,7 +69,7 @@ function AutoReplace(opts) {
     e.preventDefault()
 
     const { start, end } = getOffsets(matches, state.startOffset)
-    let transform = state
+    const transform = state
       .transform()
       .moveToOffsets(start, end)
       .delete()
@@ -138,7 +137,7 @@ function AutoReplace(opts) {
 
   return {
     onBeforeInput,
-    onKeyDown
+    onKeyDown,
   }
 }
 
@@ -154,7 +153,7 @@ function normalizeTrigger(trigger) {
     case 'regexp':
       return (e, data) => !!(e.data && e.data.match(trigger))
     case 'string':
-      return (e, data) => data.key ? data.key == trigger : e.data == trigger
+      return (e, data) => (data.key ? data.key == trigger : e.data == trigger)
   }
 }
 
@@ -175,7 +174,6 @@ function normalizeMatcher(matcher) {
       return node => node == matcher
   }
 }
-
 
 /**
  * Export.

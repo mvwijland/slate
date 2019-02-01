@@ -1,64 +1,66 @@
 // @flow
-import { type Change, type Node } from '@gitbook/slate';
+import { type Change, type Node } from '@gitbook/slate'
 
-import { isList } from '../utils';
-import type Options from '../options';
+import { isList } from '../utils'
+import type Options from '../options'
 
-type Normalizer = Change => any;
+type Normalizer = Change => any
 
 /**
  * Create a schema definition with rules to normalize lists
  */
+
 function validateNode(opts: Options): Node => void | Normalizer {
-    return node => joinAdjacentLists(opts, node);
+  return node => joinAdjacentLists(opts, node)
 }
 
 /**
  * A rule that joins adjacent lists of the same type
  */
+
 function joinAdjacentLists(opts: Options, node: Node): void | Normalizer {
-    if (node.object !== 'document' && node.object !== 'block') {
-        return undefined;
-    }
+  if (node.object !== 'document' && node.object !== 'block') {
+    return undefined
+  }
 
-    const invalids = node.nodes
-        .map((child, i) => {
-            if (!isList(opts, child)) return null;
-            const next = node.nodes.get(i + 1);
-            if (!next || !isList(opts, next) || !opts.canMerge(child, next)) {
-                return null;
-            }
+  const invalids = node.nodes
+    .map((child, i) => {
+      if (!isList(opts, child)) return null
+      const next = node.nodes.get(i + 1)
 
-            return [child, next];
-        })
-        .filter(Boolean);
+      if (!next || !isList(opts, next) || !opts.canMerge(child, next)) {
+        return null
+      }
 
-    if (invalids.isEmpty()) {
-        return undefined;
-    }
+      return [child, next]
+    })
+    .filter(Boolean)
 
-    /**
-     * Join the list pairs
-     */
-    // We join in reverse order, so that multiple lists folds onto the first one
-    return change => {
-        invalids.reverse().forEach(pair => {
-            const [first, second] = pair;
-            const updatedSecond = change.value.document.getDescendant(
-                second.key
-            );
-            updatedSecond.nodes.forEach((secondNode, index) => {
-                change.moveNodeByKey(
-                    secondNode.key,
-                    first.key,
-                    first.nodes.size + index,
-                    { normalize: false }
-                );
-            });
+  if (invalids.isEmpty()) {
+    return undefined
+  }
 
-            change.removeNodeByKey(second.key, { normalize: false });
-        });
-    };
+  /**
+   * Join the list pairs
+   */
+  // We join in reverse order, so that multiple lists folds onto the first one
+  return change => {
+    invalids.reverse().forEach(pair => {
+      const [first, second] = pair
+      const updatedSecond = change.value.document.getDescendant(second.key)
+
+      updatedSecond.nodes.forEach((secondNode, index) => {
+        change.moveNodeByKey(
+          secondNode.key,
+          first.key,
+          first.nodes.size + index,
+          { normalize: false }
+        )
+      })
+
+      change.removeNodeByKey(second.key, { normalize: false })
+    })
+  }
 }
 
-export default validateNode;
+export default validateNode

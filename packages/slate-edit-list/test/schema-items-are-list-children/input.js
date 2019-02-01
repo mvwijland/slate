@@ -1,22 +1,23 @@
 /** @jsx h */
-import h from 'h';
+
+import h from 'h'
 
 export default (
-    <value>
-        <document>
-            <list_item>
-                <paragraph>Orphan</paragraph>
-            </list_item>
-            <ul_list>
-                <list_item>
-                    <paragraph>Valid item</paragraph>
-                </list_item>
-                <list_item>
-                    <list_item>
-                        <paragraph>Direct child of another item</paragraph>
-                    </list_item>
-                </list_item>
-            </ul_list>
-        </document>
-    </value>
-);
+  <value>
+    <document>
+      <list_item>
+        <paragraph>Orphan</paragraph>
+      </list_item>
+      <ul_list>
+        <list_item>
+          <paragraph>Valid item</paragraph>
+        </list_item>
+        <list_item>
+          <list_item>
+            <paragraph>Direct child of another item</paragraph>
+          </list_item>
+        </list_item>
+      </ul_list>
+    </document>
+  </value>
+)

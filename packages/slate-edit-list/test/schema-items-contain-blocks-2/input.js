@@ -1,15 +1,16 @@
 /** @jsx h */
-import h from 'h';
+
+import h from 'h'
 
 export default (
-    <value>
-        <document>
-            <ul_list>
-                <list_item>
-                    <link>A link</link>
-                </list_item>
-                <list_item>2nd item</list_item>
-            </ul_list>
-        </document>
-    </value>
-);
+  <value>
+    <document>
+      <ul_list>
+        <list_item>
+          <link>A link</link>
+        </list_item>
+        <list_item>2nd item</list_item>
+      </ul_list>
+    </document>
+  </value>
+)

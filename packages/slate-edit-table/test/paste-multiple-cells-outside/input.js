@@ -1,34 +1,35 @@
 /** @jsx hyperscript */
-import hyperscript from '../hyperscript';
+
+import hyperscript from '../hyperscript'
 
 export default (
-    <value>
-        <document>
-            <table>
-                <table_row>
-                    <table_cell>
-                        <paragraph>Col 0, Row 0</paragraph>
-                    </table_cell>
-                    <table_cell>
-                        <paragraph>
-                            <anchor />Col 1, Row 0
-                        </paragraph>
-                    </table_cell>
-                </table_row>
-                <table_row>
-                    <table_cell>
-                        <paragraph>
-                            Col 0, Row 1<focus />
-                        </paragraph>
-                    </table_cell>
-                    <table_cell>
-                        <paragraph>Col 1, Row 1</paragraph>
-                    </table_cell>
-                </table_row>
-            </table>
+  <value>
+    <document>
+      <table>
+        <table_row>
+          <table_cell>
+            <paragraph>Col 0, Row 0</paragraph>
+          </table_cell>
+          <table_cell>
             <paragraph>
-                <text key="paste-here">Elsewhere</text>
+              <anchor />Col 1, Row 0
             </paragraph>
-        </document>
-    </value>
-);
+          </table_cell>
+        </table_row>
+        <table_row>
+          <table_cell>
+            <paragraph>
+              Col 0, Row 1<focus />
+            </paragraph>
+          </table_cell>
+          <table_cell>
+            <paragraph>Col 1, Row 1</paragraph>
+          </table_cell>
+        </table_row>
+      </table>
+      <paragraph>
+        <text key="paste-here">Elsewhere</text>
+      </paragraph>
+    </document>
+  </value>
+)
